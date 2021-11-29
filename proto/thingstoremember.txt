@@ -1,0 +1,6 @@
+look at memcache for session storage
+
+rolls should play the animation for rolling for at least a given period of animation, 
+    but should not stop playing until a timeout point or the server returns the rolled value. prevents users from cheating and makes the experience better. users can be allowed to input rolls, but it isn't default. 
+
+

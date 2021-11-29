@@ -1,0 +1,8 @@
+Base resource types
+
+ruleset
+rule (define limits, types, attributes, )
+media (2d images, 3d models, text, audio, visual effects)
+map (multiple formats available: grid, path,)
+object (items, etc. types are defined through rule resources)
+playable (characters, creatures, etc. subset of object resources which allow for player controls)

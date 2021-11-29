@@ -1,0 +1,34 @@
+connection handshake:
+
+client connects to server:
+    hey server, this is client (ip addr). this is my public key so you can send me info only I can decrypt
+server responds:
+    hey client, here is my public key, now you can send info only I can decrypt
+
+Process for doing secure auth:
+
+send server a message saying:
+    User would like to login with google
+server responds:
+    ok, here is a link to send them to
+user logs in and google oauth2 redirects back to the server and says
+    user logged in successfully, here is some info
+server stores info and also sends message to client saying:
+    you logged in as <user info>. here is a session id
+client stores in memory its user info and session id
+
+
+when client asks for info, sends a message:
+    hey server can I have <request>? I am session <session id>
+possible server response A:
+    hey client, here is your data
+possible server response B:
+    hey client, <error>
+possible server response C:
+    hey client, your session isn't valid anymore.
+
+client response to B if error is no-access:
+    tell client that it can't view that
+
+client response to C:
+    show client a login page

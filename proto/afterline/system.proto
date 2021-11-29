@@ -1,0 +1,175 @@
+syntax = "proto3";
+
+package afterline;
+
+import "afterline/asset.proto";
+import "afterline/game.proto";
+
+
+option java_multiple_files = true;
+option java_package = "org.delusion.afterline.proto.system";
+option java_outer_classname = "SystemProtos";
+
+// Login
+
+message FederatedLoginRequest {
+    bool remember_me = 1;
+}
+
+message FederatedLoginResponse {
+    string link = 1;
+}
+
+message FederatedLoginComplete {
+    fixed64 client_session_id = 1;
+
+    string user_email = 2;
+    string user_name = 3;
+
+}
+
+message FederatedLoginTimeout {
+
+}
+
+message CancelFederatedLogin {
+
+}
+
+message FederatedLogOutRequest {
+    fixed64 client_session_id = 1;
+}
+
+message FederatedLogOutResponse {
+    bool succeeded = 1;
+}
+
+
+// REMINDER: Sessions aren't persistant between server restarts. If a user marks remember me for login, the session will last up to 30 days as long as the server isn't restarted. users may store related session ids in memory, but not in persistant data.
+// Sessions
+
+message ValidateSessionIdRequest {
+    fixed64 client_session_id = 1;
+}
+
+message ValidateSessionIdResponse {
+    bool valid = 1;
+}
+
+message Disconnect {
+    fixed64 session_id = 1;
+}
+
+message Connect {
+    optional fixed64 session_id = 1;
+}
+
+// User Profiles
+
+message GetUserStatusRequest {
+    fixed64 session_id = 1;
+    fixed64 user_id = 2;
+
+    bool available = 3;
+}
+
+message GetPublicUserInfoRequest {
+    fixed64 session_id = 1; // session ids are associated to the current session and login for a given client
+    fixed64 user_id = 2; // user ids persist as long as user isn't deleted. associated with some login info
+}
+
+message GetPublicUserInfoResponse {
+    fixed64 user_id = 1;
+    message PublicUserInfo {
+        string username = 1;
+        optional string display_name = 2;
+
+        optional string user_desc = 3;
+        optional string user_status_msg = 4;
+
+        enum Status {
+            OFFLINE = 0;
+            ONLINE = 1;
+            IN_GAME = 2;
+        }
+
+        Status status = 5;
+
+        optional IconSetInfo icon_set = 6;
+
+        repeated fixed64 public_games_joined = 7; // will be empty if no games are publicly joined
+
+        repeated fixed64 friends = 8; // user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1         
+        
+    }
+
+    optional PublicUserInfo user_info = 2;
+}
+
+message GetUserIDRequest {
+    fixed64 session_id = 1;
+}
+
+message GetUserIDResponse {
+    fixed64 user_id = 1;
+}
+
+message FindUserRequest {
+    fixed64 session_id = 1;
+    string search_term = 2; // searches for users with usernames containing the search term (no lexographic similarity checks, but does search case insensitive)
+}
+
+message FindUserResponse {
+    repeated fixed64 users = 1; // only contains public users and friends
+}
+
+message BlockUserRequest {
+    fixed64 session_id = 1;
+    fixed64 user_id = 2;
+    bool block = 3;
+}
+
+message BlockUserResponse {
+    fixed64 session_id = 1;
+    fixed64 user_id = 2;
+    bool successful = 3;
+}
+
+/*
+Internally users have access levels for each other user, defaulting with 0 (public only)
+Friend is level 1.
+Blocked is level -1.
+
+-1 always means no access, 0 means public, and >0 is regulated access.
+
+this data is kept in a dually keyed database, where 2 users are the key and access level is the value
+*/
+
+message FriendUserRequest {
+    fixed64 session_id = 1;
+    fixed64 user_id = 2;
+}
+
+message FriendUserResponse {
+    fixed64 session_id = 1;
+    fixed64 user_id = 2;
+    
+    enum Status {
+        PENDING = 0; // sent when the user is the initiator of the freind request (sent to user_id)
+        BLOCKED = 1; // returned if the user is blocked by the other user (user_id blocked this user). As a side note, sending a freind request to a user you have blocked will unblock them.
+        ACCEPTED = 2; // sent when the user is the reciever of the freind request (user_id sent it)
+    }
+}
+
+message UnFriendUserRequest {
+    fixed64 session_id = 1;
+    fixed64 user_id = 2;
+}
+
+message UnFriendUserResponse {
+    fixed64 user_id = 1;
+    bool successful = 2;
+}
+
+
+

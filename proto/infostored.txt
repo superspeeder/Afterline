@@ -1,0 +1,46 @@
+User information stored:
+    Email
+    Any information entered into the user info section
+    users marked as friends
+    blocked users
+    games played in, banned from, and currently played in
+    time spent playing each game
+    sessions played in each game
+    join/leave time&date for each game session played in
+    users banned from playing in any game run by this user
+    user set status indicator (only current status)
+    direct & group messages sent by users
+    groups user is in
+    access level of user in each joined game
+    planned events being run by user
+    planned events joined by user
+    planned events which the user marks "not going"
+    created resources (includes characters as playable resources)
+    used resources
+    user-inputted rolls
+
+    only if entered:
+        discord(used for bot integration)
+        extra emails
+        current timezone (user prompted when system tz changes from stored value and user is asked if tz info should be stored. this is used to show other users what time it is for you)
+        known unavailability (can be used to rate event planning time ranges)
+
+Information gathered from system:
+    timezone
+
+
+Inferrable metrics:
+    time spent playing in total
+    total sessions played
+    how on time to sessions a user is
+    possible play time limits (amount of time or a time of day)
+    highest number of active games user is willing to join
+    liked/disliked game masters (whose games does the user play the most and least in)
+    most popular time for sessions
+    whose resources are used the most (both in general and by specific users)
+    trends in resource creation
+    if a user isnt being truthful with user inputted rolls (when statistics are skewed too far; looking at you lauri)
+
+    if action history is stored:
+        trends in user actions (ex: do they run away or run towards enemies regularly. this would be both overall for a user, related to attributes for resource templates, and specific to a playable resource/character)
+

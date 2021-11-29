@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package afterline;
+
+option java_multiple_files = true;
+option java_package = "org.delusion.afterline.proto.asset";
+option java_outer_classname = "AssetProtos";
+
+message IconSetInfo {
+    message IconInfo {
+        string image_url = 1;
+        uint32 width = 2;
+        uint32 height = 3;
+    }
+
+    repeated IconInfo icons = 1;
+}
+
+message AssetStatusRequest {
+    fixed64 session_id = 1;
+    fixed64 resource_id = 2;
+}
+
+message GameAssetStatusRequest {
+    fixed64 session_id = 1;
+    fixed64 game_id = 2;
+    fixed64 resource_id = 3;
+}
+
+message AssetStatusResponse {
+    fixed64 resource_id = 1;
+    bool available = 2;
+}
+
+message GameAssetStatusResponse {
+    fixed64 game_id = 1;
+    fixed64 resource_id = 2;
+    bool available = 3;
+}
+
+message AdminAssetStatusOverrideRequest {
+    fixed64 session_id = 1;
+    bool override = 2;
+}
+
+message AdminAssetStatusOverrideResponse {
+    bool succeeded = 1;
+}
+
