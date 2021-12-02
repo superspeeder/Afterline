@@ -21,11 +21,7 @@ public class AfterlineClientHandler extends ChannelInboundHandlerAdapter {
         int c = col.readInt();
         client.getClient().bg(new Color(c));
         col.release();
-
-        ctx.close();
-
     }
-
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {

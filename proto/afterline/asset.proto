@@ -3,7 +3,7 @@ syntax = "proto3";
 package afterline;
 
 option java_multiple_files = true;
-option java_package = "org.delusion.afterline.proto.asset";
+option java_package = "org.delusion.afterline.proto";
 option java_outer_classname = "AssetProtos";
 
 message IconSetInfo {

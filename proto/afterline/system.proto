@@ -7,7 +7,7 @@ import "afterline/game.proto";
 
 
 option java_multiple_files = true;
-option java_package = "org.delusion.afterline.proto.system";
+option java_package = "org.delusion.afterline.proto";
 option java_outer_classname = "SystemProtos";
 
 // Login
@@ -29,27 +29,16 @@ message FederatedLoginComplete {
 }
 
 message FederatedLoginTimeout {
-
 }
 
 message CancelFederatedLogin {
-
 }
 
 message FederatedLogOutRequest {
-    fixed64 client_session_id = 1;
 }
 
 message FederatedLogOutResponse {
     bool succeeded = 1;
-}
-
-
-// REMINDER: Sessions aren't persistant between server restarts. If a user marks remember me for login, the session will last up to 30 days as long as the server isn't restarted. users may store related session ids in memory, but not in persistant data.
-// Sessions
-
-message ValidateSessionIdRequest {
-    fixed64 client_session_id = 1;
 }
 
 message ValidateSessionIdResponse {
@@ -172,4 +161,12 @@ message UnFriendUserResponse {
 }
 
 
+
+message GetColorRequest {
+
+}
+
+message GetColorResponse {
+    fixed32 color = 1;
+}
 

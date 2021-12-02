@@ -1,49 +1,50 @@
 package org.delusion.afterline.server;
 
+import com.google.protobuf.Any;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.delusion.afterline.proto.GetColorRequest;
+import org.delusion.afterline.proto.GetColorResponse;
+import org.delusion.afterline.server.util.TriConsumer;
 
-import javax.net.ssl.SSLServerSocket;
-import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Arrays;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 public class AfterlineServer {
     private static final int MAX_PORT = 65535;
     private static final int DEFAULT_PORT = 9000;
 
     private int port;
+    private static Map<String, List<TriConsumer<AfterlineServer, Any, Channel>>> handlers = new HashMap<>();
 
     public AfterlineServer(int port) throws Exception {
         this.port = port;
+        initMessageHandlers();
 
-//        try {
-//            ServerSocket socket = new ServerSocket(port);
-//            System.out.println("Opened server on port " + port);
-//
-//            while (true) {
-//                Socket client = socket.accept();
-//                new Thread(() -> {
-//                    try {
-//                        handleConn(client);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }).start();
-//            }
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        System.out.println("Running server on port " + port);
+
+/* Uncomment to allow the server to speak TLS
+        SslContext sslContext = SslContextBuilder
+                .forServer(keyCertChainFile, keyFile)
+                .sslProvider(SslProvider.OPENSSL)
+                .build();
+
+        SSLEngine sslEngine = sslContext.newEngine(PooledByteBufAllocator.DEFAULT);
+*/
+
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
+
+        final AfterlineServer srv = this;
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
@@ -51,18 +52,16 @@ public class AfterlineServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new AfterlineServerHandler());
+//  uncomment to allow the server to speak TLS
+//                            ch.pipeline().addLast(new SslHandler(sslEngine));
+                            ch.pipeline().addLast(new AfterlineServerHandler(srv));
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            // Bind and start to accept incoming connections.
             ChannelFuture f = b.bind(port).sync();
 
-            // Wait until the server socket is closed.
-            // In this example, this does not happen, but you can do that to gracefully
-            // shut down your server.
             f.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();
@@ -70,29 +69,9 @@ public class AfterlineServer {
         }
     }
 
-//    private void handleConn(Socket client) throws IOException {
-//        String cn = client.toString();
-//        System.out.println("Client connected from " + cn);
-//
-//        DataOutputStream out = new DataOutputStream(client.getOutputStream());
-//        BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-//
-//        int color = 0xFF00FFFF;
-//        out.writeInt(color);
-//        while (!client.isClosed()) {
-//            if(client.getInputStream().read() == -1){
-//                client.close();
-//                break;
-//            }
-//            Thread.yield();
-////            System.out.println("Client " + cn + " is still connected!");
-//        }
-//        System.out.println("Client disconnected from " + cn);
-//    }
-
-
     public static void main(String[] args) throws Exception {
-        System.out.println(Arrays.toString(args));
+
+
         int port = DEFAULT_PORT;
         if (args.length > 0) {
             port = Integer.parseInt(args[0]);
@@ -102,5 +81,40 @@ public class AfterlineServer {
         }
 
         new AfterlineServer(port);
+    }
+
+    static Random random = new Random();
+
+    private void onColorReq(GetColorRequest req, Channel channel) {
+        post(GetColorResponse.newBuilder().setColor(random.nextInt()).build(), channel);
+    }
+
+    private void post(Message message, Channel channel) {
+        Any anymsg = Any.pack(message);
+        channel.writeAndFlush(Unpooled.wrappedBuffer(anymsg.toByteArray()));
+
+    }
+
+    private void initMessageHandlers() throws ClassNotFoundException {
+        addHandler(AfterlineServer::onColorReq);
+    }
+
+    //TODO: copy logic over to client
+    private static <T extends Message> void addHandler(TriConsumer<AfterlineServer, T, Channel> consumer) throws ClassNotFoundException {
+        Class<T> type = consumer.getT();
+
+        handlers.putIfAbsent(type.getTypeName(), new ArrayList<>());
+        handlers.get(type.getTypeName()).add((afterlineServer, message, channel) -> {
+            try {
+                T unpack = message.unpack(type);
+                consumer.accept(afterlineServer, unpack, channel);
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public List<TriConsumer<AfterlineServer, Any, Channel>> getHandlers(String name) {
+        return handlers.getOrDefault(name, List.of());
     }
 }

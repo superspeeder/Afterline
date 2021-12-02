@@ -1,43 +1,54 @@
 package org.delusion.afterline.net;
 
+import com.google.protobuf.Any;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.ssl.*;
 import org.delusion.afterline.AfterlineClient;
+import org.delusion.afterline.util.TriConsumer;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
-import java.security.Provider;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 public class AfterlineNetClient extends Thread {
     private static final String SERVER_ADDR = "localhost";
     private static final int SERVER_PORT = 9000;
 
     private final AfterlineClient client;
+    private Channel channel;
+    private static Map<String, List<BiConsumer<AfterlineClient, Any>>> handlers = new HashMap<>();
+
 
     public AfterlineNetClient(AfterlineClient client) {
         this.client = client;
+        try {
+            initMessageHandlers();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void run() {
         try {
 
+            /* uncomment to allow the client to speak tls
+            SslContext sslContext = SslContextBuilder.forClient()
+                    .sslProvider(SslProvider.OPENSSL)
+                    .build();
 
-//            SslContext sslContext = SslContextBuilder.forClient()
-//                    .sslProvider(SslProvider.OPENSSL)
-//                    .keyManager()
-//                    .build();
-//
-//            SSLEngine sslEngine = sslContext.newEngine(PooledByteBufAllocator.DEFAULT);
-
+            SSLEngine sslEngine = sslContext.newEngine(PooledByteBufAllocator.DEFAULT);
+             */
 
             EventLoopGroup workerGroup = new NioEventLoopGroup();
             final AfterlineNetClient nc = this;
@@ -50,6 +61,7 @@ public class AfterlineNetClient extends Thread {
 
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
+//  uncomment to allow the client to speak TLS
 //                        ch.pipeline().addLast(new SslHandler(sslEngine));
                         ch.pipeline().addLast(new AfterlineClientHandler(nc));
                     }
@@ -57,11 +69,14 @@ public class AfterlineNetClient extends Thread {
 
                 ChannelFuture f = b.connect(SERVER_ADDR, SERVER_PORT).sync();
 
-                f.channel().closeFuture().sync();
+                channel = f.channel();
+                channel.closeFuture().sync();
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } finally {
                 workerGroup.shutdownGracefully();
+                System.out.println("Gracefully closed connection");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,5 +85,61 @@ public class AfterlineNetClient extends Thread {
 
     public AfterlineClient getClient() {
         return client;
+    }
+
+    public Channel getChannel() {
+        return channel;
+    }
+
+    public void stopServer() {
+        channel.close();
+    }
+
+    // code taken from com.google.protobuf.Any
+    private static String getTypeNameFromTypeUrl(String typeUrl) {
+        int pos = typeUrl.lastIndexOf('/');
+        return pos == -1 ? "" : fixProtoClassName(typeUrl.substring(pos + 1));
+    }
+
+    private static String fixProtoClassName(String s) {
+        if (s.startsWith("afterline.") && s.lastIndexOf('.') == s.indexOf('.')) {
+            return "org.delusion.afterline.proto." + s.substring(10);
+        }
+        return s;
+    }
+
+    public void post(Message message) {
+        Any anymsg = Any.pack(message);
+        System.out.println(getTypeNameFromTypeUrl(anymsg.getTypeUrl()));
+
+        channel.writeAndFlush(Unpooled.wrappedBuffer(anymsg.toByteArray()));
+    }
+
+    private <T extends Message> void addHandler(TriConsumer<AfterlineClient, T, Channel> consumer) throws ClassNotFoundException {
+        Class<T> type = consumer.getT();
+
+
+
+        handlers.putIfAbsent(type.getTypeName(), new ArrayList<>());
+        handlers.get(type.getTypeName()).add((afterlineServer, message) -> {
+            try {
+                T unpack = message.unpack(type);
+                consumer.accept(client, unpack, channel);
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public List<BiConsumer<AfterlineClient, Any>> getHandlers(String name) {
+        return handlers.getOrDefault(name, List.of());
+    }
+
+    private void initMessageHandlers() throws ClassNotFoundException {
+        addHandler(AfterlineClient::onRecvColor);
+    }
+
+    public void setChannel(Channel channel) {
+        this.channel = channel;
     }
 }

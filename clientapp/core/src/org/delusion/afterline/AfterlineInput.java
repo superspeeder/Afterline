@@ -14,7 +14,7 @@ public class AfterlineInput extends InputAdapter {
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.SPACE) {
-            app.conn();
+            app.requestColor();
         }
         return super.keyDown(keycode);
     }

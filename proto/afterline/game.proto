@@ -5,7 +5,7 @@ package afterline;
 import "afterline/asset.proto";
 
 option java_multiple_files = true;
-option java_package = "org.delusion.afterline.proto.game";
+option java_package = "org.delusion.afterline.proto";
 option java_outer_classname = "GameProtos";
 
 // Game Listing
