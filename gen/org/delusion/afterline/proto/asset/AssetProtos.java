@@ -67,19 +67,17 @@ public final class AssetProtos {
       "onSetInfo\022.\n\005icons\030\001 \003(\0132\037.afterline.Ico" +
       "nSetInfo.IconInfo\032<\n\010IconInfo\022\021\n\timage_u" +
       "rl\030\001 \001(\t\022\r\n\005width\030\002 \001(\r\022\016\n\006height\030\003 \001(\r\"" +
-      "=\n\022AssetStatusRequest\022\022\n\nsession_id\030\001 \001(" +
-      "\006\022\023\n\013resource_id\030\002 \001(\006\"R\n\026GameAssetStatu" +
-      "sRequest\022\022\n\nsession_id\030\001 \001(\006\022\017\n\007game_id\030" +
+      ")\n\022AssetStatusRequest\022\023\n\013resource_id\030\002 \001" +
+      "(\006\">\n\026GameAssetStatusRequest\022\017\n\007game_id\030" +
       "\002 \001(\006\022\023\n\013resource_id\030\003 \001(\006\"=\n\023AssetStatu" +
       "sResponse\022\023\n\013resource_id\030\001 \001(\006\022\021\n\tavaila" +
       "ble\030\002 \001(\010\"R\n\027GameAssetStatusResponse\022\017\n\007" +
       "game_id\030\001 \001(\006\022\023\n\013resource_id\030\002 \001(\006\022\021\n\tav" +
-      "ailable\030\003 \001(\010\"G\n\037AdminAssetStatusOverrid" +
-      "eRequest\022\022\n\nsession_id\030\001 \001(\006\022\020\n\010override" +
-      "\030\002 \001(\010\"5\n AdminAssetStatusOverrideRespon" +
-      "se\022\021\n\tsucceeded\030\001 \001(\010B3\n\"org.delusion.af" +
-      "terline.proto.assetB\013AssetProtosP\001b\006prot" +
-      "o3"
+      "ailable\030\003 \001(\010\"3\n\037AdminAssetStatusOverrid" +
+      "eRequest\022\020\n\010override\030\002 \001(\010\"5\n AdminAsset" +
+      "StatusOverrideResponse\022\021\n\tsucceeded\030\001 \001(" +
+      "\010B3\n\"org.delusion.afterline.proto.assetB" +
+      "\013AssetProtosP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -102,13 +100,13 @@ public final class AssetProtos {
     internal_static_afterline_AssetStatusRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_afterline_AssetStatusRequest_descriptor,
-        new java.lang.String[] { "SessionId", "ResourceId", });
+        new java.lang.String[] { "ResourceId", });
     internal_static_afterline_GameAssetStatusRequest_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_afterline_GameAssetStatusRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_afterline_GameAssetStatusRequest_descriptor,
-        new java.lang.String[] { "SessionId", "GameId", "ResourceId", });
+        new java.lang.String[] { "GameId", "ResourceId", });
     internal_static_afterline_AssetStatusResponse_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_afterline_AssetStatusResponse_fieldAccessorTable = new
@@ -126,7 +124,7 @@ public final class AssetProtos {
     internal_static_afterline_AdminAssetStatusOverrideRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_afterline_AdminAssetStatusOverrideRequest_descriptor,
-        new java.lang.String[] { "SessionId", "Override", });
+        new java.lang.String[] { "Override", });
     internal_static_afterline_AdminAssetStatusOverrideResponse_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_afterline_AdminAssetStatusOverrideResponse_fieldAccessorTable = new

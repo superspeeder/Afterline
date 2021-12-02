@@ -24,17 +24,12 @@ public interface GameInfoResponseOrBuilder extends
   int getAccessLevel();
 
   /**
-   * <code>optional string name = 3;</code>
-   * @return Whether the name field is set.
-   */
-  boolean hasName();
-  /**
-   * <code>optional string name = 3;</code>
+   * <code>string name = 3;</code>
    * @return The name.
    */
   java.lang.String getName();
   /**
-   * <code>optional string name = 3;</code>
+   * <code>string name = 3;</code>
    * @return The bytes for name.
    */
   com.google.protobuf.ByteString
@@ -42,19 +37,10 @@ public interface GameInfoResponseOrBuilder extends
 
   /**
    * <pre>
-   * resource id of base ruleset 
+   * resource id of base ruleset
    * </pre>
    *
-   * <code>optional fixed64 ruleset_id = 4;</code>
-   * @return Whether the rulesetId field is set.
-   */
-  boolean hasRulesetId();
-  /**
-   * <pre>
-   * resource id of base ruleset 
-   * </pre>
-   *
-   * <code>optional fixed64 ruleset_id = 4;</code>
+   * <code>fixed64 ruleset_id = 4;</code>
    * @return The rulesetId.
    */
   long getRulesetId();
@@ -64,7 +50,7 @@ public interface GameInfoResponseOrBuilder extends
    * set of icons available
    * </pre>
    *
-   * <code>optional .afterline.IconSetInfo icon_set = 5;</code>
+   * <code>.afterline.IconSetInfo icon_set = 5;</code>
    * @return Whether the iconSet field is set.
    */
   boolean hasIconSet();
@@ -73,7 +59,7 @@ public interface GameInfoResponseOrBuilder extends
    * set of icons available
    * </pre>
    *
-   * <code>optional .afterline.IconSetInfo icon_set = 5;</code>
+   * <code>.afterline.IconSetInfo icon_set = 5;</code>
    * @return The iconSet.
    */
   org.delusion.afterline.proto.asset.IconSetInfo getIconSet();
@@ -82,7 +68,7 @@ public interface GameInfoResponseOrBuilder extends
    * set of icons available
    * </pre>
    *
-   * <code>optional .afterline.IconSetInfo icon_set = 5;</code>
+   * <code>.afterline.IconSetInfo icon_set = 5;</code>
    */
   org.delusion.afterline.proto.asset.IconSetInfoOrBuilder getIconSetOrBuilder();
 
@@ -104,12 +90,7 @@ public interface GameInfoResponseOrBuilder extends
   long getMembers(int index);
 
   /**
-   * <code>optional uint32 max_players = 7;</code>
-   * @return Whether the maxPlayers field is set.
-   */
-  boolean hasMaxPlayers();
-  /**
-   * <code>optional uint32 max_players = 7;</code>
+   * <code>uint32 max_players = 7;</code>
    * @return The maxPlayers.
    */
   int getMaxPlayers();
@@ -119,38 +100,19 @@ public interface GameInfoResponseOrBuilder extends
    * gives a user_id for the game master
    * </pre>
    *
-   * <code>optional fixed64 game_master = 8;</code>
-   * @return Whether the gameMaster field is set.
-   */
-  boolean hasGameMaster();
-  /**
-   * <pre>
-   * gives a user_id for the game master
-   * </pre>
-   *
-   * <code>optional fixed64 game_master = 8;</code>
+   * <code>fixed64 game_master = 8;</code>
    * @return The gameMaster.
    */
   long getGameMaster();
 
   /**
-   * <code>optional bool running = 9;</code>
-   * @return Whether the running field is set.
-   */
-  boolean hasRunning();
-  /**
-   * <code>optional bool running = 9;</code>
+   * <code>bool running = 9;</code>
    * @return The running.
    */
   boolean getRunning();
 
   /**
-   * <code>optional bool open = 10;</code>
-   * @return Whether the open field is set.
-   */
-  boolean hasOpen();
-  /**
-   * <code>optional bool open = 10;</code>
+   * <code>bool open = 10;</code>
    * @return The open.
    */
   boolean getOpen();

@@ -38,7 +38,6 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
-    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -49,13 +48,8 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 9: {
-
-            sessionId_ = input.readFixed64();
-            break;
-          }
           case 16: {
-            bitField0_ |= 0x00000001;
+
             maxGames_ = input.readUInt32();
             break;
           }
@@ -91,30 +85,10 @@ private static final long serialVersionUID = 0L;
             org.delusion.afterline.proto.game.GameListRequest.class, org.delusion.afterline.proto.game.GameListRequest.Builder.class);
   }
 
-  private int bitField0_;
-  public static final int SESSION_ID_FIELD_NUMBER = 1;
-  private long sessionId_;
-  /**
-   * <code>fixed64 session_id = 1;</code>
-   * @return The sessionId.
-   */
-  @java.lang.Override
-  public long getSessionId() {
-    return sessionId_;
-  }
-
   public static final int MAX_GAMES_FIELD_NUMBER = 2;
   private int maxGames_;
   /**
-   * <code>optional uint32 max_games = 2;</code>
-   * @return Whether the maxGames field is set.
-   */
-  @java.lang.Override
-  public boolean hasMaxGames() {
-    return ((bitField0_ & 0x00000001) != 0);
-  }
-  /**
-   * <code>optional uint32 max_games = 2;</code>
+   * <code>uint32 max_games = 2;</code>
    * @return The maxGames.
    */
   @java.lang.Override
@@ -136,10 +110,7 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (sessionId_ != 0L) {
-      output.writeFixed64(1, sessionId_);
-    }
-    if (((bitField0_ & 0x00000001) != 0)) {
+    if (maxGames_ != 0) {
       output.writeUInt32(2, maxGames_);
     }
     unknownFields.writeTo(output);
@@ -151,11 +122,7 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (sessionId_ != 0L) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeFixed64Size(1, sessionId_);
-    }
-    if (((bitField0_ & 0x00000001) != 0)) {
+    if (maxGames_ != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeUInt32Size(2, maxGames_);
     }
@@ -174,13 +141,8 @@ private static final long serialVersionUID = 0L;
     }
     org.delusion.afterline.proto.game.GameListRequest other = (org.delusion.afterline.proto.game.GameListRequest) obj;
 
-    if (getSessionId()
-        != other.getSessionId()) return false;
-    if (hasMaxGames() != other.hasMaxGames()) return false;
-    if (hasMaxGames()) {
-      if (getMaxGames()
-          != other.getMaxGames()) return false;
-    }
+    if (getMaxGames()
+        != other.getMaxGames()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -192,13 +154,8 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + SESSION_ID_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getSessionId());
-    if (hasMaxGames()) {
-      hash = (37 * hash) + MAX_GAMES_FIELD_NUMBER;
-      hash = (53 * hash) + getMaxGames();
-    }
+    hash = (37 * hash) + MAX_GAMES_FIELD_NUMBER;
+    hash = (53 * hash) + getMaxGames();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -332,10 +289,8 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      sessionId_ = 0L;
-
       maxGames_ = 0;
-      bitField0_ = (bitField0_ & ~0x00000001);
+
       return this;
     }
 
@@ -362,14 +317,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public org.delusion.afterline.proto.game.GameListRequest buildPartial() {
       org.delusion.afterline.proto.game.GameListRequest result = new org.delusion.afterline.proto.game.GameListRequest(this);
-      int from_bitField0_ = bitField0_;
-      int to_bitField0_ = 0;
-      result.sessionId_ = sessionId_;
-      if (((from_bitField0_ & 0x00000001) != 0)) {
-        result.maxGames_ = maxGames_;
-        to_bitField0_ |= 0x00000001;
-      }
-      result.bitField0_ = to_bitField0_;
+      result.maxGames_ = maxGames_;
       onBuilt();
       return result;
     }
@@ -418,10 +366,7 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(org.delusion.afterline.proto.game.GameListRequest other) {
       if (other == org.delusion.afterline.proto.game.GameListRequest.getDefaultInstance()) return this;
-      if (other.getSessionId() != 0L) {
-        setSessionId(other.getSessionId());
-      }
-      if (other.hasMaxGames()) {
+      if (other.getMaxGames() != 0) {
         setMaxGames(other.getMaxGames());
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -452,50 +397,10 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
-    private int bitField0_;
-
-    private long sessionId_ ;
-    /**
-     * <code>fixed64 session_id = 1;</code>
-     * @return The sessionId.
-     */
-    @java.lang.Override
-    public long getSessionId() {
-      return sessionId_;
-    }
-    /**
-     * <code>fixed64 session_id = 1;</code>
-     * @param value The sessionId to set.
-     * @return This builder for chaining.
-     */
-    public Builder setSessionId(long value) {
-      
-      sessionId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>fixed64 session_id = 1;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearSessionId() {
-      
-      sessionId_ = 0L;
-      onChanged();
-      return this;
-    }
 
     private int maxGames_ ;
     /**
-     * <code>optional uint32 max_games = 2;</code>
-     * @return Whether the maxGames field is set.
-     */
-    @java.lang.Override
-    public boolean hasMaxGames() {
-      return ((bitField0_ & 0x00000001) != 0);
-    }
-    /**
-     * <code>optional uint32 max_games = 2;</code>
+     * <code>uint32 max_games = 2;</code>
      * @return The maxGames.
      */
     @java.lang.Override
@@ -503,22 +408,22 @@ private static final long serialVersionUID = 0L;
       return maxGames_;
     }
     /**
-     * <code>optional uint32 max_games = 2;</code>
+     * <code>uint32 max_games = 2;</code>
      * @param value The maxGames to set.
      * @return This builder for chaining.
      */
     public Builder setMaxGames(int value) {
-      bitField0_ |= 0x00000001;
+      
       maxGames_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional uint32 max_games = 2;</code>
+     * <code>uint32 max_games = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearMaxGames() {
-      bitField0_ = (bitField0_ & ~0x00000001);
+      
       maxGames_ = 0;
       onChanged();
       return this;

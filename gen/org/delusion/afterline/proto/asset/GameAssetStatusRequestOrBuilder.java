@@ -8,12 +8,6 @@ public interface GameAssetStatusRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>fixed64 session_id = 1;</code>
-   * @return The sessionId.
-   */
-  long getSessionId();
-
-  /**
    * <code>fixed64 game_id = 2;</code>
    * @return The gameId.
    */

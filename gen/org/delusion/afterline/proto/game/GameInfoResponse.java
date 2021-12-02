@@ -63,18 +63,18 @@ private static final long serialVersionUID = 0L;
           }
           case 26: {
             java.lang.String s = input.readStringRequireUtf8();
-            bitField0_ |= 0x00000001;
+
             name_ = s;
             break;
           }
           case 33: {
-            bitField0_ |= 0x00000002;
+
             rulesetId_ = input.readFixed64();
             break;
           }
           case 42: {
             org.delusion.afterline.proto.asset.IconSetInfo.Builder subBuilder = null;
-            if (((bitField0_ & 0x00000004) != 0)) {
+            if (iconSet_ != null) {
               subBuilder = iconSet_.toBuilder();
             }
             iconSet_ = input.readMessage(org.delusion.afterline.proto.asset.IconSetInfo.parser(), extensionRegistry);
@@ -82,13 +82,13 @@ private static final long serialVersionUID = 0L;
               subBuilder.mergeFrom(iconSet_);
               iconSet_ = subBuilder.buildPartial();
             }
-            bitField0_ |= 0x00000004;
+
             break;
           }
           case 49: {
-            if (!((mutable_bitField0_ & 0x00000008) != 0)) {
+            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
               members_ = newLongList();
-              mutable_bitField0_ |= 0x00000008;
+              mutable_bitField0_ |= 0x00000001;
             }
             members_.addLong(input.readFixed64());
             break;
@@ -96,9 +96,9 @@ private static final long serialVersionUID = 0L;
           case 50: {
             int length = input.readRawVarint32();
             int limit = input.pushLimit(length);
-            if (!((mutable_bitField0_ & 0x00000008) != 0) && input.getBytesUntilLimit() > 0) {
+            if (!((mutable_bitField0_ & 0x00000001) != 0) && input.getBytesUntilLimit() > 0) {
               members_ = newLongList();
-              mutable_bitField0_ |= 0x00000008;
+              mutable_bitField0_ |= 0x00000001;
             }
             while (input.getBytesUntilLimit() > 0) {
               members_.addLong(input.readFixed64());
@@ -107,22 +107,22 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 56: {
-            bitField0_ |= 0x00000008;
+
             maxPlayers_ = input.readUInt32();
             break;
           }
           case 65: {
-            bitField0_ |= 0x00000010;
+
             gameMaster_ = input.readFixed64();
             break;
           }
           case 72: {
-            bitField0_ |= 0x00000020;
+
             running_ = input.readBool();
             break;
           }
           case 80: {
-            bitField0_ |= 0x00000040;
+
             open_ = input.readBool();
             break;
           }
@@ -141,7 +141,7 @@ private static final long serialVersionUID = 0L;
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
-      if (((mutable_bitField0_ & 0x00000008) != 0)) {
+      if (((mutable_bitField0_ & 0x00000001) != 0)) {
         members_.makeImmutable(); // C
       }
       this.unknownFields = unknownFields.build();
@@ -161,7 +161,6 @@ private static final long serialVersionUID = 0L;
             org.delusion.afterline.proto.game.GameInfoResponse.class, org.delusion.afterline.proto.game.GameInfoResponse.Builder.class);
   }
 
-  private int bitField0_;
   public static final int GAME_ID_FIELD_NUMBER = 1;
   private long gameId_;
   /**
@@ -191,15 +190,7 @@ private static final long serialVersionUID = 0L;
   public static final int NAME_FIELD_NUMBER = 3;
   private volatile java.lang.Object name_;
   /**
-   * <code>optional string name = 3;</code>
-   * @return Whether the name field is set.
-   */
-  @java.lang.Override
-  public boolean hasName() {
-    return ((bitField0_ & 0x00000001) != 0);
-  }
-  /**
-   * <code>optional string name = 3;</code>
+   * <code>string name = 3;</code>
    * @return The name.
    */
   @java.lang.Override
@@ -216,7 +207,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>optional string name = 3;</code>
+   * <code>string name = 3;</code>
    * @return The bytes for name.
    */
   @java.lang.Override
@@ -238,22 +229,10 @@ private static final long serialVersionUID = 0L;
   private long rulesetId_;
   /**
    * <pre>
-   * resource id of base ruleset 
+   * resource id of base ruleset
    * </pre>
    *
-   * <code>optional fixed64 ruleset_id = 4;</code>
-   * @return Whether the rulesetId field is set.
-   */
-  @java.lang.Override
-  public boolean hasRulesetId() {
-    return ((bitField0_ & 0x00000002) != 0);
-  }
-  /**
-   * <pre>
-   * resource id of base ruleset 
-   * </pre>
-   *
-   * <code>optional fixed64 ruleset_id = 4;</code>
+   * <code>fixed64 ruleset_id = 4;</code>
    * @return The rulesetId.
    */
   @java.lang.Override
@@ -268,19 +247,19 @@ private static final long serialVersionUID = 0L;
    * set of icons available
    * </pre>
    *
-   * <code>optional .afterline.IconSetInfo icon_set = 5;</code>
+   * <code>.afterline.IconSetInfo icon_set = 5;</code>
    * @return Whether the iconSet field is set.
    */
   @java.lang.Override
   public boolean hasIconSet() {
-    return ((bitField0_ & 0x00000004) != 0);
+    return iconSet_ != null;
   }
   /**
    * <pre>
    * set of icons available
    * </pre>
    *
-   * <code>optional .afterline.IconSetInfo icon_set = 5;</code>
+   * <code>.afterline.IconSetInfo icon_set = 5;</code>
    * @return The iconSet.
    */
   @java.lang.Override
@@ -292,11 +271,11 @@ private static final long serialVersionUID = 0L;
    * set of icons available
    * </pre>
    *
-   * <code>optional .afterline.IconSetInfo icon_set = 5;</code>
+   * <code>.afterline.IconSetInfo icon_set = 5;</code>
    */
   @java.lang.Override
   public org.delusion.afterline.proto.asset.IconSetInfoOrBuilder getIconSetOrBuilder() {
-    return iconSet_ == null ? org.delusion.afterline.proto.asset.IconSetInfo.getDefaultInstance() : iconSet_;
+    return getIconSet();
   }
 
   public static final int MEMBERS_FIELD_NUMBER = 6;
@@ -330,15 +309,7 @@ private static final long serialVersionUID = 0L;
   public static final int MAX_PLAYERS_FIELD_NUMBER = 7;
   private int maxPlayers_;
   /**
-   * <code>optional uint32 max_players = 7;</code>
-   * @return Whether the maxPlayers field is set.
-   */
-  @java.lang.Override
-  public boolean hasMaxPlayers() {
-    return ((bitField0_ & 0x00000008) != 0);
-  }
-  /**
-   * <code>optional uint32 max_players = 7;</code>
+   * <code>uint32 max_players = 7;</code>
    * @return The maxPlayers.
    */
   @java.lang.Override
@@ -353,19 +324,7 @@ private static final long serialVersionUID = 0L;
    * gives a user_id for the game master
    * </pre>
    *
-   * <code>optional fixed64 game_master = 8;</code>
-   * @return Whether the gameMaster field is set.
-   */
-  @java.lang.Override
-  public boolean hasGameMaster() {
-    return ((bitField0_ & 0x00000010) != 0);
-  }
-  /**
-   * <pre>
-   * gives a user_id for the game master
-   * </pre>
-   *
-   * <code>optional fixed64 game_master = 8;</code>
+   * <code>fixed64 game_master = 8;</code>
    * @return The gameMaster.
    */
   @java.lang.Override
@@ -376,15 +335,7 @@ private static final long serialVersionUID = 0L;
   public static final int RUNNING_FIELD_NUMBER = 9;
   private boolean running_;
   /**
-   * <code>optional bool running = 9;</code>
-   * @return Whether the running field is set.
-   */
-  @java.lang.Override
-  public boolean hasRunning() {
-    return ((bitField0_ & 0x00000020) != 0);
-  }
-  /**
-   * <code>optional bool running = 9;</code>
+   * <code>bool running = 9;</code>
    * @return The running.
    */
   @java.lang.Override
@@ -395,15 +346,7 @@ private static final long serialVersionUID = 0L;
   public static final int OPEN_FIELD_NUMBER = 10;
   private boolean open_;
   /**
-   * <code>optional bool open = 10;</code>
-   * @return Whether the open field is set.
-   */
-  @java.lang.Override
-  public boolean hasOpen() {
-    return ((bitField0_ & 0x00000040) != 0);
-  }
-  /**
-   * <code>optional bool open = 10;</code>
+   * <code>bool open = 10;</code>
    * @return The open.
    */
   @java.lang.Override
@@ -432,13 +375,13 @@ private static final long serialVersionUID = 0L;
     if (accessLevel_ != 0) {
       output.writeInt32(2, accessLevel_);
     }
-    if (((bitField0_ & 0x00000001) != 0)) {
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, name_);
     }
-    if (((bitField0_ & 0x00000002) != 0)) {
+    if (rulesetId_ != 0L) {
       output.writeFixed64(4, rulesetId_);
     }
-    if (((bitField0_ & 0x00000004) != 0)) {
+    if (iconSet_ != null) {
       output.writeMessage(5, getIconSet());
     }
     if (getMembersList().size() > 0) {
@@ -448,16 +391,16 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < members_.size(); i++) {
       output.writeFixed64NoTag(members_.getLong(i));
     }
-    if (((bitField0_ & 0x00000008) != 0)) {
+    if (maxPlayers_ != 0) {
       output.writeUInt32(7, maxPlayers_);
     }
-    if (((bitField0_ & 0x00000010) != 0)) {
+    if (gameMaster_ != 0L) {
       output.writeFixed64(8, gameMaster_);
     }
-    if (((bitField0_ & 0x00000020) != 0)) {
+    if (running_ != false) {
       output.writeBool(9, running_);
     }
-    if (((bitField0_ & 0x00000040) != 0)) {
+    if (open_ != false) {
       output.writeBool(10, open_);
     }
     unknownFields.writeTo(output);
@@ -477,14 +420,14 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(2, accessLevel_);
     }
-    if (((bitField0_ & 0x00000001) != 0)) {
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, name_);
     }
-    if (((bitField0_ & 0x00000002) != 0)) {
+    if (rulesetId_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
         .computeFixed64Size(4, rulesetId_);
     }
-    if (((bitField0_ & 0x00000004) != 0)) {
+    if (iconSet_ != null) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(5, getIconSet());
     }
@@ -499,19 +442,19 @@ private static final long serialVersionUID = 0L;
       }
       membersMemoizedSerializedSize = dataSize;
     }
-    if (((bitField0_ & 0x00000008) != 0)) {
+    if (maxPlayers_ != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeUInt32Size(7, maxPlayers_);
     }
-    if (((bitField0_ & 0x00000010) != 0)) {
+    if (gameMaster_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
         .computeFixed64Size(8, gameMaster_);
     }
-    if (((bitField0_ & 0x00000020) != 0)) {
+    if (running_ != false) {
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(9, running_);
     }
-    if (((bitField0_ & 0x00000040) != 0)) {
+    if (open_ != false) {
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(10, open_);
     }
@@ -534,16 +477,10 @@ private static final long serialVersionUID = 0L;
         != other.getGameId()) return false;
     if (getAccessLevel()
         != other.getAccessLevel()) return false;
-    if (hasName() != other.hasName()) return false;
-    if (hasName()) {
-      if (!getName()
-          .equals(other.getName())) return false;
-    }
-    if (hasRulesetId() != other.hasRulesetId()) return false;
-    if (hasRulesetId()) {
-      if (getRulesetId()
-          != other.getRulesetId()) return false;
-    }
+    if (!getName()
+        .equals(other.getName())) return false;
+    if (getRulesetId()
+        != other.getRulesetId()) return false;
     if (hasIconSet() != other.hasIconSet()) return false;
     if (hasIconSet()) {
       if (!getIconSet()
@@ -551,26 +488,14 @@ private static final long serialVersionUID = 0L;
     }
     if (!getMembersList()
         .equals(other.getMembersList())) return false;
-    if (hasMaxPlayers() != other.hasMaxPlayers()) return false;
-    if (hasMaxPlayers()) {
-      if (getMaxPlayers()
-          != other.getMaxPlayers()) return false;
-    }
-    if (hasGameMaster() != other.hasGameMaster()) return false;
-    if (hasGameMaster()) {
-      if (getGameMaster()
-          != other.getGameMaster()) return false;
-    }
-    if (hasRunning() != other.hasRunning()) return false;
-    if (hasRunning()) {
-      if (getRunning()
-          != other.getRunning()) return false;
-    }
-    if (hasOpen() != other.hasOpen()) return false;
-    if (hasOpen()) {
-      if (getOpen()
-          != other.getOpen()) return false;
-    }
+    if (getMaxPlayers()
+        != other.getMaxPlayers()) return false;
+    if (getGameMaster()
+        != other.getGameMaster()) return false;
+    if (getRunning()
+        != other.getRunning()) return false;
+    if (getOpen()
+        != other.getOpen()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -587,15 +512,11 @@ private static final long serialVersionUID = 0L;
         getGameId());
     hash = (37 * hash) + ACCESS_LEVEL_FIELD_NUMBER;
     hash = (53 * hash) + getAccessLevel();
-    if (hasName()) {
-      hash = (37 * hash) + NAME_FIELD_NUMBER;
-      hash = (53 * hash) + getName().hashCode();
-    }
-    if (hasRulesetId()) {
-      hash = (37 * hash) + RULESET_ID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getRulesetId());
-    }
+    hash = (37 * hash) + NAME_FIELD_NUMBER;
+    hash = (53 * hash) + getName().hashCode();
+    hash = (37 * hash) + RULESET_ID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getRulesetId());
     if (hasIconSet()) {
       hash = (37 * hash) + ICON_SET_FIELD_NUMBER;
       hash = (53 * hash) + getIconSet().hashCode();
@@ -604,25 +525,17 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + MEMBERS_FIELD_NUMBER;
       hash = (53 * hash) + getMembersList().hashCode();
     }
-    if (hasMaxPlayers()) {
-      hash = (37 * hash) + MAX_PLAYERS_FIELD_NUMBER;
-      hash = (53 * hash) + getMaxPlayers();
-    }
-    if (hasGameMaster()) {
-      hash = (37 * hash) + GAME_MASTER_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getGameMaster());
-    }
-    if (hasRunning()) {
-      hash = (37 * hash) + RUNNING_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-          getRunning());
-    }
-    if (hasOpen()) {
-      hash = (37 * hash) + OPEN_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-          getOpen());
-    }
+    hash = (37 * hash) + MAX_PLAYERS_FIELD_NUMBER;
+    hash = (53 * hash) + getMaxPlayers();
+    hash = (37 * hash) + GAME_MASTER_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getGameMaster());
+    hash = (37 * hash) + RUNNING_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getRunning());
+    hash = (37 * hash) + OPEN_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getOpen());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -751,7 +664,6 @@ private static final long serialVersionUID = 0L;
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
-        getIconSetFieldBuilder();
       }
     }
     @java.lang.Override
@@ -762,25 +674,25 @@ private static final long serialVersionUID = 0L;
       accessLevel_ = 0;
 
       name_ = "";
-      bitField0_ = (bitField0_ & ~0x00000001);
+
       rulesetId_ = 0L;
-      bitField0_ = (bitField0_ & ~0x00000002);
+
       if (iconSetBuilder_ == null) {
         iconSet_ = null;
       } else {
-        iconSetBuilder_.clear();
+        iconSet_ = null;
+        iconSetBuilder_ = null;
       }
-      bitField0_ = (bitField0_ & ~0x00000004);
       members_ = emptyLongList();
-      bitField0_ = (bitField0_ & ~0x00000008);
+      bitField0_ = (bitField0_ & ~0x00000001);
       maxPlayers_ = 0;
-      bitField0_ = (bitField0_ & ~0x00000010);
+
       gameMaster_ = 0L;
-      bitField0_ = (bitField0_ & ~0x00000020);
+
       running_ = false;
-      bitField0_ = (bitField0_ & ~0x00000040);
+
       open_ = false;
-      bitField0_ = (bitField0_ & ~0x00000080);
+
       return this;
     }
 
@@ -808,47 +720,24 @@ private static final long serialVersionUID = 0L;
     public org.delusion.afterline.proto.game.GameInfoResponse buildPartial() {
       org.delusion.afterline.proto.game.GameInfoResponse result = new org.delusion.afterline.proto.game.GameInfoResponse(this);
       int from_bitField0_ = bitField0_;
-      int to_bitField0_ = 0;
       result.gameId_ = gameId_;
       result.accessLevel_ = accessLevel_;
-      if (((from_bitField0_ & 0x00000001) != 0)) {
-        to_bitField0_ |= 0x00000001;
-      }
       result.name_ = name_;
-      if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.rulesetId_ = rulesetId_;
-        to_bitField0_ |= 0x00000002;
+      result.rulesetId_ = rulesetId_;
+      if (iconSetBuilder_ == null) {
+        result.iconSet_ = iconSet_;
+      } else {
+        result.iconSet_ = iconSetBuilder_.build();
       }
-      if (((from_bitField0_ & 0x00000004) != 0)) {
-        if (iconSetBuilder_ == null) {
-          result.iconSet_ = iconSet_;
-        } else {
-          result.iconSet_ = iconSetBuilder_.build();
-        }
-        to_bitField0_ |= 0x00000004;
-      }
-      if (((bitField0_ & 0x00000008) != 0)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         members_.makeImmutable();
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000001);
       }
       result.members_ = members_;
-      if (((from_bitField0_ & 0x00000010) != 0)) {
-        result.maxPlayers_ = maxPlayers_;
-        to_bitField0_ |= 0x00000008;
-      }
-      if (((from_bitField0_ & 0x00000020) != 0)) {
-        result.gameMaster_ = gameMaster_;
-        to_bitField0_ |= 0x00000010;
-      }
-      if (((from_bitField0_ & 0x00000040) != 0)) {
-        result.running_ = running_;
-        to_bitField0_ |= 0x00000020;
-      }
-      if (((from_bitField0_ & 0x00000080) != 0)) {
-        result.open_ = open_;
-        to_bitField0_ |= 0x00000040;
-      }
-      result.bitField0_ = to_bitField0_;
+      result.maxPlayers_ = maxPlayers_;
+      result.gameMaster_ = gameMaster_;
+      result.running_ = running_;
+      result.open_ = open_;
       onBuilt();
       return result;
     }
@@ -903,12 +792,11 @@ private static final long serialVersionUID = 0L;
       if (other.getAccessLevel() != 0) {
         setAccessLevel(other.getAccessLevel());
       }
-      if (other.hasName()) {
-        bitField0_ |= 0x00000001;
+      if (!other.getName().isEmpty()) {
         name_ = other.name_;
         onChanged();
       }
-      if (other.hasRulesetId()) {
+      if (other.getRulesetId() != 0L) {
         setRulesetId(other.getRulesetId());
       }
       if (other.hasIconSet()) {
@@ -917,23 +805,23 @@ private static final long serialVersionUID = 0L;
       if (!other.members_.isEmpty()) {
         if (members_.isEmpty()) {
           members_ = other.members_;
-          bitField0_ = (bitField0_ & ~0x00000008);
+          bitField0_ = (bitField0_ & ~0x00000001);
         } else {
           ensureMembersIsMutable();
           members_.addAll(other.members_);
         }
         onChanged();
       }
-      if (other.hasMaxPlayers()) {
+      if (other.getMaxPlayers() != 0) {
         setMaxPlayers(other.getMaxPlayers());
       }
-      if (other.hasGameMaster()) {
+      if (other.getGameMaster() != 0L) {
         setGameMaster(other.getGameMaster());
       }
-      if (other.hasRunning()) {
+      if (other.getRunning() != false) {
         setRunning(other.getRunning());
       }
-      if (other.hasOpen()) {
+      if (other.getOpen() != false) {
         setOpen(other.getOpen());
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -1042,14 +930,7 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object name_ = "";
     /**
-     * <code>optional string name = 3;</code>
-     * @return Whether the name field is set.
-     */
-    public boolean hasName() {
-      return ((bitField0_ & 0x00000001) != 0);
-    }
-    /**
-     * <code>optional string name = 3;</code>
+     * <code>string name = 3;</code>
      * @return The name.
      */
     public java.lang.String getName() {
@@ -1065,7 +946,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>optional string name = 3;</code>
+     * <code>string name = 3;</code>
      * @return The bytes for name.
      */
     public com.google.protobuf.ByteString
@@ -1082,7 +963,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>optional string name = 3;</code>
+     * <code>string name = 3;</code>
      * @param value The name to set.
      * @return This builder for chaining.
      */
@@ -1091,23 +972,23 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000001;
+  
       name_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional string name = 3;</code>
+     * <code>string name = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearName() {
-      bitField0_ = (bitField0_ & ~0x00000001);
+      
       name_ = getDefaultInstance().getName();
       onChanged();
       return this;
     }
     /**
-     * <code>optional string name = 3;</code>
+     * <code>string name = 3;</code>
      * @param value The bytes for name to set.
      * @return This builder for chaining.
      */
@@ -1117,7 +998,7 @@ private static final long serialVersionUID = 0L;
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-      bitField0_ |= 0x00000001;
+      
       name_ = value;
       onChanged();
       return this;
@@ -1126,22 +1007,10 @@ private static final long serialVersionUID = 0L;
     private long rulesetId_ ;
     /**
      * <pre>
-     * resource id of base ruleset 
+     * resource id of base ruleset
      * </pre>
      *
-     * <code>optional fixed64 ruleset_id = 4;</code>
-     * @return Whether the rulesetId field is set.
-     */
-    @java.lang.Override
-    public boolean hasRulesetId() {
-      return ((bitField0_ & 0x00000002) != 0);
-    }
-    /**
-     * <pre>
-     * resource id of base ruleset 
-     * </pre>
-     *
-     * <code>optional fixed64 ruleset_id = 4;</code>
+     * <code>fixed64 ruleset_id = 4;</code>
      * @return The rulesetId.
      */
     @java.lang.Override
@@ -1150,29 +1019,29 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * resource id of base ruleset 
+     * resource id of base ruleset
      * </pre>
      *
-     * <code>optional fixed64 ruleset_id = 4;</code>
+     * <code>fixed64 ruleset_id = 4;</code>
      * @param value The rulesetId to set.
      * @return This builder for chaining.
      */
     public Builder setRulesetId(long value) {
-      bitField0_ |= 0x00000002;
+      
       rulesetId_ = value;
       onChanged();
       return this;
     }
     /**
      * <pre>
-     * resource id of base ruleset 
+     * resource id of base ruleset
      * </pre>
      *
-     * <code>optional fixed64 ruleset_id = 4;</code>
+     * <code>fixed64 ruleset_id = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearRulesetId() {
-      bitField0_ = (bitField0_ & ~0x00000002);
+      
       rulesetId_ = 0L;
       onChanged();
       return this;
@@ -1186,18 +1055,18 @@ private static final long serialVersionUID = 0L;
      * set of icons available
      * </pre>
      *
-     * <code>optional .afterline.IconSetInfo icon_set = 5;</code>
+     * <code>.afterline.IconSetInfo icon_set = 5;</code>
      * @return Whether the iconSet field is set.
      */
     public boolean hasIconSet() {
-      return ((bitField0_ & 0x00000004) != 0);
+      return iconSetBuilder_ != null || iconSet_ != null;
     }
     /**
      * <pre>
      * set of icons available
      * </pre>
      *
-     * <code>optional .afterline.IconSetInfo icon_set = 5;</code>
+     * <code>.afterline.IconSetInfo icon_set = 5;</code>
      * @return The iconSet.
      */
     public org.delusion.afterline.proto.asset.IconSetInfo getIconSet() {
@@ -1212,7 +1081,7 @@ private static final long serialVersionUID = 0L;
      * set of icons available
      * </pre>
      *
-     * <code>optional .afterline.IconSetInfo icon_set = 5;</code>
+     * <code>.afterline.IconSetInfo icon_set = 5;</code>
      */
     public Builder setIconSet(org.delusion.afterline.proto.asset.IconSetInfo value) {
       if (iconSetBuilder_ == null) {
@@ -1224,7 +1093,7 @@ private static final long serialVersionUID = 0L;
       } else {
         iconSetBuilder_.setMessage(value);
       }
-      bitField0_ |= 0x00000004;
+
       return this;
     }
     /**
@@ -1232,7 +1101,7 @@ private static final long serialVersionUID = 0L;
      * set of icons available
      * </pre>
      *
-     * <code>optional .afterline.IconSetInfo icon_set = 5;</code>
+     * <code>.afterline.IconSetInfo icon_set = 5;</code>
      */
     public Builder setIconSet(
         org.delusion.afterline.proto.asset.IconSetInfo.Builder builderForValue) {
@@ -1242,7 +1111,7 @@ private static final long serialVersionUID = 0L;
       } else {
         iconSetBuilder_.setMessage(builderForValue.build());
       }
-      bitField0_ |= 0x00000004;
+
       return this;
     }
     /**
@@ -1250,13 +1119,11 @@ private static final long serialVersionUID = 0L;
      * set of icons available
      * </pre>
      *
-     * <code>optional .afterline.IconSetInfo icon_set = 5;</code>
+     * <code>.afterline.IconSetInfo icon_set = 5;</code>
      */
     public Builder mergeIconSet(org.delusion.afterline.proto.asset.IconSetInfo value) {
       if (iconSetBuilder_ == null) {
-        if (((bitField0_ & 0x00000004) != 0) &&
-            iconSet_ != null &&
-            iconSet_ != org.delusion.afterline.proto.asset.IconSetInfo.getDefaultInstance()) {
+        if (iconSet_ != null) {
           iconSet_ =
             org.delusion.afterline.proto.asset.IconSetInfo.newBuilder(iconSet_).mergeFrom(value).buildPartial();
         } else {
@@ -1266,7 +1133,7 @@ private static final long serialVersionUID = 0L;
       } else {
         iconSetBuilder_.mergeFrom(value);
       }
-      bitField0_ |= 0x00000004;
+
       return this;
     }
     /**
@@ -1274,16 +1141,17 @@ private static final long serialVersionUID = 0L;
      * set of icons available
      * </pre>
      *
-     * <code>optional .afterline.IconSetInfo icon_set = 5;</code>
+     * <code>.afterline.IconSetInfo icon_set = 5;</code>
      */
     public Builder clearIconSet() {
       if (iconSetBuilder_ == null) {
         iconSet_ = null;
         onChanged();
       } else {
-        iconSetBuilder_.clear();
+        iconSet_ = null;
+        iconSetBuilder_ = null;
       }
-      bitField0_ = (bitField0_ & ~0x00000004);
+
       return this;
     }
     /**
@@ -1291,10 +1159,10 @@ private static final long serialVersionUID = 0L;
      * set of icons available
      * </pre>
      *
-     * <code>optional .afterline.IconSetInfo icon_set = 5;</code>
+     * <code>.afterline.IconSetInfo icon_set = 5;</code>
      */
     public org.delusion.afterline.proto.asset.IconSetInfo.Builder getIconSetBuilder() {
-      bitField0_ |= 0x00000004;
+      
       onChanged();
       return getIconSetFieldBuilder().getBuilder();
     }
@@ -1303,7 +1171,7 @@ private static final long serialVersionUID = 0L;
      * set of icons available
      * </pre>
      *
-     * <code>optional .afterline.IconSetInfo icon_set = 5;</code>
+     * <code>.afterline.IconSetInfo icon_set = 5;</code>
      */
     public org.delusion.afterline.proto.asset.IconSetInfoOrBuilder getIconSetOrBuilder() {
       if (iconSetBuilder_ != null) {
@@ -1318,7 +1186,7 @@ private static final long serialVersionUID = 0L;
      * set of icons available
      * </pre>
      *
-     * <code>optional .afterline.IconSetInfo icon_set = 5;</code>
+     * <code>.afterline.IconSetInfo icon_set = 5;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         org.delusion.afterline.proto.asset.IconSetInfo, org.delusion.afterline.proto.asset.IconSetInfo.Builder, org.delusion.afterline.proto.asset.IconSetInfoOrBuilder> 
@@ -1336,9 +1204,9 @@ private static final long serialVersionUID = 0L;
 
     private com.google.protobuf.Internal.LongList members_ = emptyLongList();
     private void ensureMembersIsMutable() {
-      if (!((bitField0_ & 0x00000008) != 0)) {
+      if (!((bitField0_ & 0x00000001) != 0)) {
         members_ = mutableCopy(members_);
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000001;
        }
     }
     /**
@@ -1347,7 +1215,7 @@ private static final long serialVersionUID = 0L;
      */
     public java.util.List<java.lang.Long>
         getMembersList() {
-      return ((bitField0_ & 0x00000008) != 0) ?
+      return ((bitField0_ & 0x00000001) != 0) ?
                java.util.Collections.unmodifiableList(members_) : members_;
     }
     /**
@@ -1408,22 +1276,14 @@ private static final long serialVersionUID = 0L;
      */
     public Builder clearMembers() {
       members_ = emptyLongList();
-      bitField0_ = (bitField0_ & ~0x00000008);
+      bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
     }
 
     private int maxPlayers_ ;
     /**
-     * <code>optional uint32 max_players = 7;</code>
-     * @return Whether the maxPlayers field is set.
-     */
-    @java.lang.Override
-    public boolean hasMaxPlayers() {
-      return ((bitField0_ & 0x00000010) != 0);
-    }
-    /**
-     * <code>optional uint32 max_players = 7;</code>
+     * <code>uint32 max_players = 7;</code>
      * @return The maxPlayers.
      */
     @java.lang.Override
@@ -1431,22 +1291,22 @@ private static final long serialVersionUID = 0L;
       return maxPlayers_;
     }
     /**
-     * <code>optional uint32 max_players = 7;</code>
+     * <code>uint32 max_players = 7;</code>
      * @param value The maxPlayers to set.
      * @return This builder for chaining.
      */
     public Builder setMaxPlayers(int value) {
-      bitField0_ |= 0x00000010;
+      
       maxPlayers_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional uint32 max_players = 7;</code>
+     * <code>uint32 max_players = 7;</code>
      * @return This builder for chaining.
      */
     public Builder clearMaxPlayers() {
-      bitField0_ = (bitField0_ & ~0x00000010);
+      
       maxPlayers_ = 0;
       onChanged();
       return this;
@@ -1458,19 +1318,7 @@ private static final long serialVersionUID = 0L;
      * gives a user_id for the game master
      * </pre>
      *
-     * <code>optional fixed64 game_master = 8;</code>
-     * @return Whether the gameMaster field is set.
-     */
-    @java.lang.Override
-    public boolean hasGameMaster() {
-      return ((bitField0_ & 0x00000020) != 0);
-    }
-    /**
-     * <pre>
-     * gives a user_id for the game master
-     * </pre>
-     *
-     * <code>optional fixed64 game_master = 8;</code>
+     * <code>fixed64 game_master = 8;</code>
      * @return The gameMaster.
      */
     @java.lang.Override
@@ -1482,12 +1330,12 @@ private static final long serialVersionUID = 0L;
      * gives a user_id for the game master
      * </pre>
      *
-     * <code>optional fixed64 game_master = 8;</code>
+     * <code>fixed64 game_master = 8;</code>
      * @param value The gameMaster to set.
      * @return This builder for chaining.
      */
     public Builder setGameMaster(long value) {
-      bitField0_ |= 0x00000020;
+      
       gameMaster_ = value;
       onChanged();
       return this;
@@ -1497,11 +1345,11 @@ private static final long serialVersionUID = 0L;
      * gives a user_id for the game master
      * </pre>
      *
-     * <code>optional fixed64 game_master = 8;</code>
+     * <code>fixed64 game_master = 8;</code>
      * @return This builder for chaining.
      */
     public Builder clearGameMaster() {
-      bitField0_ = (bitField0_ & ~0x00000020);
+      
       gameMaster_ = 0L;
       onChanged();
       return this;
@@ -1509,15 +1357,7 @@ private static final long serialVersionUID = 0L;
 
     private boolean running_ ;
     /**
-     * <code>optional bool running = 9;</code>
-     * @return Whether the running field is set.
-     */
-    @java.lang.Override
-    public boolean hasRunning() {
-      return ((bitField0_ & 0x00000040) != 0);
-    }
-    /**
-     * <code>optional bool running = 9;</code>
+     * <code>bool running = 9;</code>
      * @return The running.
      */
     @java.lang.Override
@@ -1525,22 +1365,22 @@ private static final long serialVersionUID = 0L;
       return running_;
     }
     /**
-     * <code>optional bool running = 9;</code>
+     * <code>bool running = 9;</code>
      * @param value The running to set.
      * @return This builder for chaining.
      */
     public Builder setRunning(boolean value) {
-      bitField0_ |= 0x00000040;
+      
       running_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional bool running = 9;</code>
+     * <code>bool running = 9;</code>
      * @return This builder for chaining.
      */
     public Builder clearRunning() {
-      bitField0_ = (bitField0_ & ~0x00000040);
+      
       running_ = false;
       onChanged();
       return this;
@@ -1548,15 +1388,7 @@ private static final long serialVersionUID = 0L;
 
     private boolean open_ ;
     /**
-     * <code>optional bool open = 10;</code>
-     * @return Whether the open field is set.
-     */
-    @java.lang.Override
-    public boolean hasOpen() {
-      return ((bitField0_ & 0x00000080) != 0);
-    }
-    /**
-     * <code>optional bool open = 10;</code>
+     * <code>bool open = 10;</code>
      * @return The open.
      */
     @java.lang.Override
@@ -1564,22 +1396,22 @@ private static final long serialVersionUID = 0L;
       return open_;
     }
     /**
-     * <code>optional bool open = 10;</code>
+     * <code>bool open = 10;</code>
      * @param value The open to set.
      * @return This builder for chaining.
      */
     public Builder setOpen(boolean value) {
-      bitField0_ |= 0x00000080;
+      
       open_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional bool open = 10;</code>
+     * <code>bool open = 10;</code>
      * @return This builder for chaining.
      */
     public Builder clearOpen() {
-      bitField0_ = (bitField0_ & ~0x00000080);
+      
       open_ = false;
       onChanged();
       return this;

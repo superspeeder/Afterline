@@ -8,18 +8,7 @@ public interface GameListRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>fixed64 session_id = 1;</code>
-   * @return The sessionId.
-   */
-  long getSessionId();
-
-  /**
-   * <code>optional uint32 max_games = 2;</code>
-   * @return Whether the maxGames field is set.
-   */
-  boolean hasMaxGames();
-  /**
-   * <code>optional uint32 max_games = 2;</code>
+   * <code>uint32 max_games = 2;</code>
    * @return The maxGames.
    */
   int getMaxGames();

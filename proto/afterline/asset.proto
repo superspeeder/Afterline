@@ -17,12 +17,10 @@ message IconSetInfo {
 }
 
 message AssetStatusRequest {
-    fixed64 session_id = 1;
     fixed64 resource_id = 2;
 }
 
 message GameAssetStatusRequest {
-    fixed64 session_id = 1;
     fixed64 game_id = 2;
     fixed64 resource_id = 3;
 }
@@ -39,7 +37,6 @@ message GameAssetStatusResponse {
 }
 
 message AdminAssetStatusOverrideRequest {
-    fixed64 session_id = 1;
     bool override = 2;
 }
 

@@ -223,7 +223,7 @@ private static final long serialVersionUID = 0L;
 
     /**
      * <pre>
-     * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1         
+     * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1
      * </pre>
      *
      * <code>repeated fixed64 friends = 8;</code>
@@ -232,7 +232,7 @@ private static final long serialVersionUID = 0L;
     java.util.List<java.lang.Long> getFriendsList();
     /**
      * <pre>
-     * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1         
+     * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1
      * </pre>
      *
      * <code>repeated fixed64 friends = 8;</code>
@@ -241,7 +241,7 @@ private static final long serialVersionUID = 0L;
     int getFriendsCount();
     /**
      * <pre>
-     * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1         
+     * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1
      * </pre>
      *
      * <code>repeated fixed64 friends = 8;</code>
@@ -809,7 +809,7 @@ private static final long serialVersionUID = 0L;
     private com.google.protobuf.Internal.LongList friends_;
     /**
      * <pre>
-     * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1         
+     * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1
      * </pre>
      *
      * <code>repeated fixed64 friends = 8;</code>
@@ -822,7 +822,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1         
+     * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1
      * </pre>
      *
      * <code>repeated fixed64 friends = 8;</code>
@@ -833,7 +833,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1         
+     * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1
      * </pre>
      *
      * <code>repeated fixed64 friends = 8;</code>
@@ -1977,7 +1977,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1         
+       * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1
        * </pre>
        *
        * <code>repeated fixed64 friends = 8;</code>
@@ -1990,7 +1990,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1         
+       * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1
        * </pre>
        *
        * <code>repeated fixed64 friends = 8;</code>
@@ -2001,7 +2001,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1         
+       * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1
        * </pre>
        *
        * <code>repeated fixed64 friends = 8;</code>
@@ -2013,7 +2013,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1         
+       * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1
        * </pre>
        *
        * <code>repeated fixed64 friends = 8;</code>
@@ -2030,7 +2030,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1         
+       * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1
        * </pre>
        *
        * <code>repeated fixed64 friends = 8;</code>
@@ -2045,7 +2045,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1         
+       * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1
        * </pre>
        *
        * <code>repeated fixed64 friends = 8;</code>
@@ -2062,7 +2062,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1         
+       * user ids of friends, obtained through a call like 'SELECT user_id_2 FROM user_relations WHERE user_id_1={thisuserid} AND relation_level=1
        * </pre>
        *
        * <code>repeated fixed64 friends = 8;</code>

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import org.delusion.afterline.net.AfterlineNetClient;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -32,12 +33,10 @@ public class AfterlineClient extends ApplicationAdapter {
 	}
 
 	public void conn() {
-//		try (Socket sock = new Socket("localhost", 9000)) {
-//			DataInputStream in = new DataInputStream(sock.getInputStream());
-//			color = new Color(in.readInt());
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-
+		new AfterlineNetClient(this).start();
 	}
+
+    public void bg(Color color) {
+		this.color = color;
+    }
 }

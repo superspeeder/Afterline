@@ -54,26 +54,21 @@ public final class GameProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\024afterline/game.proto\022\tafterline\032\025after" +
-      "line/asset.proto\"K\n\017GameListRequest\022\022\n\ns" +
-      "ession_id\030\001 \001(\006\022\026\n\tmax_games\030\002 \001(\rH\000\210\001\001B" +
-      "\014\n\n_max_games\"$\n\020GameListResponse\022\020\n\010gam" +
-      "e_ids\030\001 \003(\006\"6\n\017GameInfoRequest\022\022\n\nsessio" +
-      "n_id\030\001 \001(\006\022\017\n\007game_id\030\002 \001(\006\"\334\002\n\020GameInfo" +
-      "Response\022\017\n\007game_id\030\001 \001(\006\022\024\n\014access_leve" +
-      "l\030\002 \001(\005\022\021\n\004name\030\003 \001(\tH\000\210\001\001\022\027\n\nruleset_id" +
-      "\030\004 \001(\006H\001\210\001\001\022-\n\010icon_set\030\005 \001(\0132\026.afterlin" +
-      "e.IconSetInfoH\002\210\001\001\022\017\n\007members\030\006 \003(\006\022\030\n\013m" +
-      "ax_players\030\007 \001(\rH\003\210\001\001\022\030\n\013game_master\030\010 \001" +
-      "(\006H\004\210\001\001\022\024\n\007running\030\t \001(\010H\005\210\001\001\022\021\n\004open\030\n " +
-      "\001(\010H\006\210\001\001B\007\n\005_nameB\r\n\013_ruleset_idB\013\n\t_ico" +
-      "n_setB\016\n\014_max_playersB\016\n\014_game_masterB\n\n" +
-      "\010_runningB\007\n\005_open\"6\n\017JoinGameRequest\022\022\n" +
-      "\nsession_id\030\001 \001(\006\022\017\n\007game_id\030\002 \001(\006\"\212\001\n\020J" +
-      "oinGameResponse\022\017\n\007game_id\030\001 \001(\006\0222\n\006stat" +
-      "us\030\002 \001(\0162\".afterline.JoinGameResponse.St" +
-      "atus\"1\n\006Status\022\016\n\nDISALLOWED\020\000\022\013\n\007PENDIN" +
-      "G\020\001\022\n\n\006JOINED\020\002B1\n!org.delusion.afterlin" +
-      "e.proto.gameB\nGameProtosP\001b\006proto3"
+      "line/asset.proto\"$\n\017GameListRequest\022\021\n\tm" +
+      "ax_games\030\002 \001(\r\"$\n\020GameListResponse\022\020\n\010ga" +
+      "me_ids\030\001 \003(\006\"\"\n\017GameInfoRequest\022\017\n\007game_" +
+      "id\030\002 \001(\006\"\337\001\n\020GameInfoResponse\022\017\n\007game_id" +
+      "\030\001 \001(\006\022\024\n\014access_level\030\002 \001(\005\022\014\n\004name\030\003 \001" +
+      "(\t\022\022\n\nruleset_id\030\004 \001(\006\022(\n\010icon_set\030\005 \001(\013" +
+      "2\026.afterline.IconSetInfo\022\017\n\007members\030\006 \003(" +
+      "\006\022\023\n\013max_players\030\007 \001(\r\022\023\n\013game_master\030\010 " +
+      "\001(\006\022\017\n\007running\030\t \001(\010\022\014\n\004open\030\n \001(\010\"\"\n\017Jo" +
+      "inGameRequest\022\017\n\007game_id\030\002 \001(\006\"\212\001\n\020JoinG" +
+      "ameResponse\022\017\n\007game_id\030\001 \001(\006\0222\n\006status\030\002" +
+      " \001(\0162\".afterline.JoinGameResponse.Status" +
+      "\"1\n\006Status\022\016\n\nDISALLOWED\020\000\022\013\n\007PENDING\020\001\022" +
+      "\n\n\006JOINED\020\002B1\n!org.delusion.afterline.pr" +
+      "oto.gameB\nGameProtosP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -85,7 +80,7 @@ public final class GameProtos {
     internal_static_afterline_GameListRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_afterline_GameListRequest_descriptor,
-        new java.lang.String[] { "SessionId", "MaxGames", "MaxGames", });
+        new java.lang.String[] { "MaxGames", });
     internal_static_afterline_GameListResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_afterline_GameListResponse_fieldAccessorTable = new
@@ -97,19 +92,19 @@ public final class GameProtos {
     internal_static_afterline_GameInfoRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_afterline_GameInfoRequest_descriptor,
-        new java.lang.String[] { "SessionId", "GameId", });
+        new java.lang.String[] { "GameId", });
     internal_static_afterline_GameInfoResponse_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_afterline_GameInfoResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_afterline_GameInfoResponse_descriptor,
-        new java.lang.String[] { "GameId", "AccessLevel", "Name", "RulesetId", "IconSet", "Members", "MaxPlayers", "GameMaster", "Running", "Open", "Name", "RulesetId", "IconSet", "MaxPlayers", "GameMaster", "Running", "Open", });
+        new java.lang.String[] { "GameId", "AccessLevel", "Name", "RulesetId", "IconSet", "Members", "MaxPlayers", "GameMaster", "Running", "Open", });
     internal_static_afterline_JoinGameRequest_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_afterline_JoinGameRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_afterline_JoinGameRequest_descriptor,
-        new java.lang.String[] { "SessionId", "GameId", });
+        new java.lang.String[] { "GameId", });
     internal_static_afterline_JoinGameResponse_descriptor =
       getDescriptor().getMessageTypes().get(5);
     internal_static_afterline_JoinGameResponse_fieldAccessorTable = new

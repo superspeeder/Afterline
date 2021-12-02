@@ -8,12 +8,6 @@ public interface AdminAssetStatusOverrideRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>fixed64 session_id = 1;</code>
-   * @return The sessionId.
-   */
-  long getSessionId();
-
-  /**
    * <code>bool override = 2;</code>
    * @return The override.
    */

@@ -48,11 +48,6 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 9: {
-
-            sessionId_ = input.readFixed64();
-            break;
-          }
           case 16: {
 
             override_ = input.readBool();
@@ -90,17 +85,6 @@ private static final long serialVersionUID = 0L;
             org.delusion.afterline.proto.asset.AdminAssetStatusOverrideRequest.class, org.delusion.afterline.proto.asset.AdminAssetStatusOverrideRequest.Builder.class);
   }
 
-  public static final int SESSION_ID_FIELD_NUMBER = 1;
-  private long sessionId_;
-  /**
-   * <code>fixed64 session_id = 1;</code>
-   * @return The sessionId.
-   */
-  @java.lang.Override
-  public long getSessionId() {
-    return sessionId_;
-  }
-
   public static final int OVERRIDE_FIELD_NUMBER = 2;
   private boolean override_;
   /**
@@ -126,9 +110,6 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (sessionId_ != 0L) {
-      output.writeFixed64(1, sessionId_);
-    }
     if (override_ != false) {
       output.writeBool(2, override_);
     }
@@ -141,10 +122,6 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (sessionId_ != 0L) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeFixed64Size(1, sessionId_);
-    }
     if (override_ != false) {
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(2, override_);
@@ -164,8 +141,6 @@ private static final long serialVersionUID = 0L;
     }
     org.delusion.afterline.proto.asset.AdminAssetStatusOverrideRequest other = (org.delusion.afterline.proto.asset.AdminAssetStatusOverrideRequest) obj;
 
-    if (getSessionId()
-        != other.getSessionId()) return false;
     if (getOverride()
         != other.getOverride()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
@@ -179,9 +154,6 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + SESSION_ID_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getSessionId());
     hash = (37 * hash) + OVERRIDE_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getOverride());
@@ -318,8 +290,6 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      sessionId_ = 0L;
-
       override_ = false;
 
       return this;
@@ -348,7 +318,6 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public org.delusion.afterline.proto.asset.AdminAssetStatusOverrideRequest buildPartial() {
       org.delusion.afterline.proto.asset.AdminAssetStatusOverrideRequest result = new org.delusion.afterline.proto.asset.AdminAssetStatusOverrideRequest(this);
-      result.sessionId_ = sessionId_;
       result.override_ = override_;
       onBuilt();
       return result;
@@ -398,9 +367,6 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(org.delusion.afterline.proto.asset.AdminAssetStatusOverrideRequest other) {
       if (other == org.delusion.afterline.proto.asset.AdminAssetStatusOverrideRequest.getDefaultInstance()) return this;
-      if (other.getSessionId() != 0L) {
-        setSessionId(other.getSessionId());
-      }
       if (other.getOverride() != false) {
         setOverride(other.getOverride());
       }
@@ -430,37 +396,6 @@ private static final long serialVersionUID = 0L;
           mergeFrom(parsedMessage);
         }
       }
-      return this;
-    }
-
-    private long sessionId_ ;
-    /**
-     * <code>fixed64 session_id = 1;</code>
-     * @return The sessionId.
-     */
-    @java.lang.Override
-    public long getSessionId() {
-      return sessionId_;
-    }
-    /**
-     * <code>fixed64 session_id = 1;</code>
-     * @param value The sessionId to set.
-     * @return This builder for chaining.
-     */
-    public Builder setSessionId(long value) {
-      
-      sessionId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>fixed64 session_id = 1;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearSessionId() {
-      
-      sessionId_ = 0L;
-      onChanged();
       return this;
     }
 

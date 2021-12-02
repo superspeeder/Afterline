@@ -11,9 +11,7 @@ option java_outer_classname = "GameProtos";
 // Game Listing
 
 message GameListRequest {
-    fixed64 session_id = 1;
-
-    optional uint32 max_games = 2; 
+    uint32 max_games = 2;
 }
 
 message GameListResponse {
@@ -23,7 +21,6 @@ message GameListResponse {
 // Game Info
 
 message GameInfoRequest {
-    fixed64 session_id = 1;
     fixed64 game_id = 2;
 }
 
@@ -31,21 +28,20 @@ message GameInfoResponse {
     fixed64 game_id = 1;
     int32 access_level = 2; // Value of -1 will be returned if access is denied and if the game doesn't exist. Server will deny existance of games hidden from user. resources have access levels associated with them, as well as users in games. This determines what the user can and can't access. for debug purposes, sysadmins can use a secret and a forceaccess message to gain access to a resource
 
-    optional string name = 3;
-    optional fixed64 ruleset_id = 4; // resource id of base ruleset 
-    optional IconSetInfo icon_set = 5; // set of icons available
+    string name = 3;
+    fixed64 ruleset_id = 4; // resource id of base ruleset
+    IconSetInfo icon_set = 5; // set of icons available
 
     repeated fixed64 members = 6;
-    optional uint32 max_players = 7;
+    uint32 max_players = 7;
 
-    optional fixed64 game_master = 8; // gives a user_id for the game master
+    fixed64 game_master = 8; // gives a user_id for the game master
 
-    optional bool running = 9;
-    optional bool open = 10;
+    bool running = 9;
+    bool open = 10;
 }
 
 message JoinGameRequest {
-    fixed64 session_id = 1;
     fixed64 game_id = 2;
 }
 
