@@ -19,7 +19,6 @@ public class AfterlineServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("Read!");
         ByteBuf in = (ByteBuf)msg;
         try {
             Any pmsg = Any.parseFrom(in.nioBuffer());
@@ -50,10 +49,7 @@ public class AfterlineServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(4);
-        buf.writeInt(0xFFFF00FF);
-        ctx.writeAndFlush(buf);
-        System.out.println("Returned color from activity");
+
     }
 
     @Override

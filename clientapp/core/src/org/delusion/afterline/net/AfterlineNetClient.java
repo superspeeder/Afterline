@@ -11,6 +11,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.delusion.afterline.AfterlineClient;
+import org.delusion.afterline.proto.GetColorResponse;
 import org.delusion.afterline.util.TriConsumer;
 
 import java.lang.reflect.ParameterizedType;
@@ -31,11 +32,7 @@ public class AfterlineNetClient extends Thread {
 
     public AfterlineNetClient(AfterlineClient client) {
         this.client = client;
-        try {
-            initMessageHandlers();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        initMessageHandlers();
     }
 
     @Override
@@ -110,20 +107,14 @@ public class AfterlineNetClient extends Thread {
 
     public void post(Message message) {
         Any anymsg = Any.pack(message);
-        System.out.println(getTypeNameFromTypeUrl(anymsg.getTypeUrl()));
-
         channel.writeAndFlush(Unpooled.wrappedBuffer(anymsg.toByteArray()));
     }
 
-    private <T extends Message> void addHandler(TriConsumer<AfterlineClient, T, Channel> consumer) throws ClassNotFoundException {
-        Class<T> type = consumer.getT();
-
-
-
-        handlers.putIfAbsent(type.getTypeName(), new ArrayList<>());
-        handlers.get(type.getTypeName()).add((afterlineServer, message) -> {
+    private <T extends Message> void addHandler(TriConsumer<AfterlineClient, T, Channel> consumer, Class<T> cls) {
+        handlers.putIfAbsent(cls.getName(), new ArrayList<>());
+        handlers.get(cls.getName()).add((afterlineServer, message) -> {
             try {
-                T unpack = message.unpack(type);
+                T unpack = message.unpack(cls);
                 consumer.accept(client, unpack, channel);
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
@@ -135,11 +126,7 @@ public class AfterlineNetClient extends Thread {
         return handlers.getOrDefault(name, List.of());
     }
 
-    private void initMessageHandlers() throws ClassNotFoundException {
-        addHandler(AfterlineClient::onRecvColor);
-    }
-
-    public void setChannel(Channel channel) {
-        this.channel = channel;
+    private void initMessageHandlers() {
+        addHandler(AfterlineClient::onRecvColor, GetColorResponse.class);
     }
 }

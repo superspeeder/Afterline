@@ -13,11 +13,7 @@ import org.delusion.afterline.proto.GetColorRequest;
 import org.delusion.afterline.proto.GetColorResponse;
 import org.delusion.afterline.server.util.TriConsumer;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.stream.Stream;
 
 public class AfterlineServer {
     private static final int MAX_PORT = 65535;
@@ -26,11 +22,16 @@ public class AfterlineServer {
     private int port;
     private static Map<String, List<TriConsumer<AfterlineServer, Any, Channel>>> handlers = new HashMap<>();
 
+    private void initMessageHandlers() {
+        addHandler(AfterlineServer::onColorReq, GetColorRequest.class);
+    }
+
+
     public AfterlineServer(int port) throws Exception {
         this.port = port;
         initMessageHandlers();
 
-        System.out.println("Running server on port " + port);
+        System.out.println("Running server on port " + this.port);
 
 /* Uncomment to allow the server to speak TLS
         SslContext sslContext = SslContextBuilder
@@ -60,7 +61,7 @@ public class AfterlineServer {
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            ChannelFuture f = b.bind(port).sync();
+            ChannelFuture f = b.bind(this.port).sync();
 
             f.channel().closeFuture().sync();
         } finally {
@@ -89,24 +90,33 @@ public class AfterlineServer {
         post(GetColorResponse.newBuilder().setColor(random.nextInt()).build(), channel);
     }
 
+    // code adapted from com.google.protobuf.Any
+    private static String getTypeNameFromTypeUrl(String typeUrl) {
+        int pos = typeUrl.lastIndexOf('/');
+        return pos == -1 ? "" : fixProtoClassName(typeUrl.substring(pos + 1));
+    }
+
+    private static String fixProtoClassName(String s) {
+        if (s.startsWith("afterline.") && s.lastIndexOf('.') == s.indexOf('.')) {
+            return "org.delusion.afterline.proto." + s.substring(10);
+        }
+        return s;
+    }
+
     private void post(Message message, Channel channel) {
         Any anymsg = Any.pack(message);
+        System.out.println(getTypeNameFromTypeUrl(anymsg.getTypeUrl()));
+
         channel.writeAndFlush(Unpooled.wrappedBuffer(anymsg.toByteArray()));
 
     }
 
-    private void initMessageHandlers() throws ClassNotFoundException {
-        addHandler(AfterlineServer::onColorReq);
-    }
+    private static <T extends Message> void addHandler(TriConsumer<AfterlineServer, T, Channel> consumer, Class<T> cls) {
 
-    //TODO: copy logic over to client
-    private static <T extends Message> void addHandler(TriConsumer<AfterlineServer, T, Channel> consumer) throws ClassNotFoundException {
-        Class<T> type = consumer.getT();
-
-        handlers.putIfAbsent(type.getTypeName(), new ArrayList<>());
-        handlers.get(type.getTypeName()).add((afterlineServer, message, channel) -> {
+        handlers.putIfAbsent(cls.getName(), new ArrayList<>());
+        handlers.get(cls.getName()).add((afterlineServer, message, channel) -> {
             try {
-                T unpack = message.unpack(type);
+                T unpack = message.unpack(cls);
                 consumer.accept(afterlineServer, unpack, channel);
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
