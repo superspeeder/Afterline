@@ -127,6 +127,5 @@ public class AfterlineNetClient extends Thread {
     }
 
     private void initMessageHandlers() {
-        addHandler(AfterlineClient::onRecvColor, GetColorResponse.class);
     }
 }

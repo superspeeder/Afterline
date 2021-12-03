@@ -1,6 +1,7 @@
 package org.delusion.afterline;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -9,42 +10,26 @@ import io.netty.channel.Channel;
 import org.delusion.afterline.net.AfterlineNetClient;
 import org.delusion.afterline.proto.GetColorRequest;
 import org.delusion.afterline.proto.GetColorResponse;
+import org.delusion.afterline.ui.MainMenu;
 
-public class AfterlineClient extends ApplicationAdapter {
+public class AfterlineClient extends Game {
 	private AfterlineNetClient netClient;
-	private Color color = Color.RED;
+	private MainMenu mainMenu;
+
+	public static final Color ICONBG = new Color(0x387BE4FF);
 
 	@Override
 	public void create () {
-		Gdx.input.setInputProcessor(new AfterlineInput(this));
-
 		netClient = new AfterlineNetClient(this);
 		netClient.start();
-
+		mainMenu = new MainMenu(this);
+		setScreen(mainMenu);
+		
 	}
 
-
-	@Override
-	public void render () {
-		ScreenUtils.clear(color);
-	}
-	
 	@Override
 	public void dispose () {
 		netClient.stopServer();
+		mainMenu.dispose();
 	}
-
-	public void requestColor() {
-		GetColorRequest colorRequest = GetColorRequest.newBuilder().build();
-
-		netClient.post(colorRequest);
-	}
-
-    public void bg(Color color) {
-		this.color = color;
-    }
-
-    public void onRecvColor(GetColorResponse colorResp, Channel channel) {
-		bg(new Color(colorResp.getColor()));
-    }
 }
