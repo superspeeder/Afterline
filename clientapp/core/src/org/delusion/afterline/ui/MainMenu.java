@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
@@ -33,7 +34,7 @@ public class MainMenu extends ScreenAdapter {
         table.setFillParent(true);
         stage.addActor(table);
 
-        table.setDebug(false);
+        table.setDebug(true);
 
         icontex = new Texture(Gdx.files.internal("textures/afterline_icon.png"));
 
@@ -53,7 +54,20 @@ public class MainMenu extends ScreenAdapter {
     public void show() {
         Gdx.input.setInputProcessor(stage);
         icoimg.setColor(1,1,1,0);
-        icoimg.addAction(Actions.sequence(Actions.delay(10), Actions.fadeIn(1.5f)));
+        icoimg.addAction(
+                Actions.sequence(Actions.delay(1),
+                        Actions.fadeIn(1.5f),
+                        Actions.delay(2), Actions.parallel(
+                                Actions.moveToAligned(10, 10 + stage.getHeight() / 16,Align.topLeft, 1.0f, Interpolation.fastSlow),
+                                Actions.sizeTo(stage.getWidth() / 16, stage.getHeight() / 16, 1.0f, Interpolation.fastSlow)
+                        ),
+                        Actions.run(() -> {
+                            icoimg.setAlign(Align.topLeft);
+                            icoImageCell.size(stage.getWidth() / 16, stage.getHeight() / 16).align(Align.topLeft).padLeft(10).padTop(10);
+                            table.left().top();
+                        })
+                )
+        );
     }
 
     @Override
