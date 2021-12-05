@@ -8,8 +8,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.google.protobuf.Message;
 import io.netty.channel.Channel;
 import org.delusion.afterline.net.AfterlineNetClient;
-import org.delusion.afterline.proto.GetColorRequest;
-import org.delusion.afterline.proto.GetColorResponse;
 import org.delusion.afterline.ui.MainMenu;
 
 public class AfterlineClient extends Game {
@@ -23,6 +21,7 @@ public class AfterlineClient extends Game {
 		netClient = new AfterlineNetClient(this);
 		netClient.start();
 		mainMenu = new MainMenu(this);
+		ScreenUtils.clear(0,0,0,1);
 		setScreen(mainMenu);
 		
 	}
