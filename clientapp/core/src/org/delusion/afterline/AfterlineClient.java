@@ -11,6 +11,7 @@ import org.delusion.afterline.net.AfterlineNetClient;
 import org.delusion.afterline.ui.MainMenu;
 
 public class AfterlineClient extends Game {
+	public static final Color BACKGROUND = Color.DARK_GRAY;
 	private AfterlineNetClient netClient;
 	private MainMenu mainMenu;
 
