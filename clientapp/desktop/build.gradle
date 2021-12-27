@@ -1,4 +1,4 @@
-sourceCompatibility = 15
+sourceCompatibility = 13
 sourceSets.main.java.srcDirs = [ "src/" ]
 sourceSets.main.resources.srcDirs = ["../core/assets"]
 
