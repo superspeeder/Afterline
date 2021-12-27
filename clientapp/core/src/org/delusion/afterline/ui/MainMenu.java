@@ -83,7 +83,7 @@ public class MainMenu extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
         icoimg.setColor(1,1,1,0);
         icoImageCell.getActor().addAction(
-                Actions.sequence(Actions.delay(5),
+                Actions.sequence(Actions.delay(1),
                         Actions.fadeIn(1.5f),
                         Actions.delay(2), Actions.parallel(
                                 Actions.moveToAligned(10, stage.getHeight() - 10,Align.topLeft, 0.33f, Interpolation.pow5Out),
