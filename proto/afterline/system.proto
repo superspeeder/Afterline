@@ -50,7 +50,7 @@ message Disconnect {
 }
 
 message Connect {
-    optional fixed64 session_id = 1;
+    fixed64 session_id = 1;
 }
 
 // User Profiles
