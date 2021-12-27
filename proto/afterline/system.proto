@@ -71,10 +71,10 @@ message GetPublicUserInfoResponse {
     fixed64 user_id = 1;
     message PublicUserInfo {
         string username = 1;
-        optional string display_name = 2;
+        string display_name = 2;
 
-        optional string user_desc = 3;
-        optional string user_status_msg = 4;
+        string user_desc = 3;
+        string user_status_msg = 4;
 
         enum Status {
             OFFLINE = 0;
@@ -84,7 +84,7 @@ message GetPublicUserInfoResponse {
 
         Status status = 5;
 
-        optional IconSetInfo icon_set = 6;
+        IconSetInfo icon_set = 6;
 
         repeated fixed64 public_games_joined = 7; // will be empty if no games are publicly joined
 
@@ -92,7 +92,7 @@ message GetPublicUserInfoResponse {
         
     }
 
-    optional PublicUserInfo user_info = 2;
+    PublicUserInfo user_info = 2;
 }
 
 message GetUserIDRequest {
