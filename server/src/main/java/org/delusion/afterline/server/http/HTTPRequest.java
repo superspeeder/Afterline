@@ -8,7 +8,7 @@ public class HTTPRequest {
         GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH
     }
 
-    private static final String requestLineRegex = "^(?<method>[a-zA-Z]+)\\ (?<path>\\/([^\\\\\\:\\ ]+)*)\\ HTTP\\/(?<httpVersion>[1-9][0-9]*(\\.[1-9][0-9]*)?)$";
+    private static final String requestLineRegex = "(?<method>[a-zA-Z]+)\\ (?<path>\\/([^\\\\\\:\\ ]+)*)\\ HTTP\\/(?<httpVersion>[1-9][0-9]*(\\.[1-9][0-9]*)?)\r?\n?";
     private static final String headerLineRegex = "^(?<headerField>[A-Za-z][A-Za-z\\-]*):(?<headerValue>.*)$";
 
     private String httpVersionStr;
@@ -39,7 +39,10 @@ public class HTTPRequest {
 
             String requestLine = lines[0];
             Matcher requestLineMatcher = requestLinePattern.matcher(requestLine);
-            requestLineMatcher.matches();
+            if (requestLineMatcher.matches()) {
+                System.out.println("matches");
+            }
+
             String vs = requestLineMatcher.group("httpVersion");
             httpVersionStr = "HTTP/" + vs;
             String methodStr = requestLineMatcher.group("method");
