@@ -19,4 +19,29 @@ dependencies {
 
 application {
     mainClass = 'org.delusion.afterline.server.AfterlineServer'
+    applicationDefaultJvmArgs = ['--enable-preview']
 }
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += '--enable-preview'
+}
+
+tasks.withType(Test) {
+    jvmArgs += "--enable-preview"
+}
+
+
+jar {
+
+    manifest {
+        attributes(
+            'Main-Class': 'org.delusion.afterline.server.AfterlineServer'
+        )
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+

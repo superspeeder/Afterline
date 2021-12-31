@@ -110,12 +110,12 @@ public class HTTPRequest {
         return this;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         String testRequest = """
 GET /http/http_message_examples.htm HTTP/1.1
 Host: www.tutorialspoint.com
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:95.0) Gecko/20100101 Firefox/95.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,**;q=0.8
 Accept-Language: en-US,en;q=0.5
 Accept-Encoding: gzip, deflate, br
 Connection: keep-alive
@@ -133,5 +133,5 @@ Cache-Control: max-age=0
         req.getHeaders().getAll().forEach((hf, hv) -> System.out.println("  " + hf + " = `" + hv + "`"));
         System.out.println("Content:");
         System.out.println(req.content);
-    }
+    }*/
 }

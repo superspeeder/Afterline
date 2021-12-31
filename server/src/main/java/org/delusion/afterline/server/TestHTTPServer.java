@@ -21,6 +21,14 @@ public class TestHTTPServer {
         }
     }
 
+    public static void create(int port, boolean ssl) {
+        try {
+            new SimpleHTTPServer(TestHandler::new, new InetSocketAddress("127.0.0.1", port), ssl);
+        } catch (InterruptedException | SSLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) throws InterruptedException, SSLException {
         new SimpleHTTPServer(TestHandler::new, new InetSocketAddress("localhost", 8080), true);
     }

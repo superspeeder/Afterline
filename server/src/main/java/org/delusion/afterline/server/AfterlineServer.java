@@ -12,9 +12,23 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.delusion.afterline.proto.GetColorRequest;
 import org.delusion.afterline.proto.GetColorResponse;
 import org.delusion.afterline.server.util.TriConsumer;
+import io.netty.buffer.PooledByteBufAllocator;
 
 import java.io.IOException;
 import java.util.*;
+import java.nio.file.Path;
+import java.lang.Integer;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLException;
+import javax.net.ssl.X509TrustManager;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.SslHandler;
+import io.netty.handler.ssl.SslProvider;
+
 
 public class AfterlineServer {
     private static final int MAX_PORT = 65535;
@@ -22,6 +36,8 @@ public class AfterlineServer {
 
     private int port;
     private static Map<String, List<TriConsumer<AfterlineServer, Any, Channel>>> handlers = new HashMap<>();
+    private Thread httpThread;
+
 
     private void initMessageHandlers() {
         addHandler(AfterlineServer::onColorReq, GetColorRequest.class);
@@ -29,19 +45,37 @@ public class AfterlineServer {
 
 
     public AfterlineServer(int port) throws Exception {
+        int httpPort = Integer.parseInt(System.getenv("AFTERLINE_HTTP_PORT"));
+        httpThread = new Thread(() -> TestHTTPServer.create(httpPort, false));
+
         this.port = port;
         initMessageHandlers();
 
         System.out.println("Running server on port " + this.port);
 
-/* Uncomment to allow the server to speak TLS
+
         SslContext sslContext = SslContextBuilder
-                .forServer(keyCertChainFile, keyFile)
+                .forServer(Path.of(System.getenv("AFTERLINE_CERT")).toFile(), Path.of(System.getenv("AFTERLINE_KEY")).toFile())
                 .sslProvider(SslProvider.OPENSSL)
-                .build();
+                .trustManager(new X509TrustManager() {
+                        @Override
+                        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+                        }
+
+                        @Override
+                        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+                        }
+
+                        @Override
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return new X509Certificate[0];
+                        }
+                    }).build();
 
         SSLEngine sslEngine = sslContext.newEngine(PooledByteBufAllocator.DEFAULT);
-*/
+
 
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
