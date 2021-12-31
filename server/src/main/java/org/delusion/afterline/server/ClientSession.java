@@ -149,6 +149,8 @@ public class ClientSession {
     //         BEGIN FEDERATED AUTH         //
     //////////////////////////////////////////
 
+    // TODO: load the credentials from file under env var AFTERLINE_GAPI_CREDENTIALS
+
     private static final URI GOOGLE_AUTH_URI = URI.create("https://accounts.google.com/o/oauth2/v2/auth");
     private static final URI REDIRECT_URL = URI.create("http://afterline.world-of-cat.club/authredirect");
     private static Map<String, String> sessionCSRFStates = new ConcurrentHashMap<>(); // ip -> csrf token. This is done with cookies in a web browser, but this is more of a cross-server forgery token to prevent users other than the verified user to send this message, couples with the fact that future communication w/ server will be TLS encrypted using a certificate.

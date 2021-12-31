@@ -89,7 +89,7 @@ public class AfterlineServer {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
 //  uncomment to allow the server to speak TLS
-//                            ch.pipeline().addLast(new SslHandler(sslEngine));
+                            ch.pipeline().addLast(new SslHandler(sslEngine));
                             ch.pipeline().addLast(new AfterlineServerHandler(srv));
                         }
                     })
