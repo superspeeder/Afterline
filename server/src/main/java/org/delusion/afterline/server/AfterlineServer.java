@@ -13,6 +13,7 @@ import org.delusion.afterline.proto.GetColorRequest;
 import org.delusion.afterline.proto.GetColorResponse;
 import org.delusion.afterline.server.util.TriConsumer;
 
+import java.io.IOException;
 import java.util.*;
 
 public class AfterlineServer {
@@ -103,7 +104,7 @@ public class AfterlineServer {
         return s;
     }
 
-    private void post(Message message, Channel channel) {
+    public void post(Message message, Channel channel) {
         Any anymsg = Any.pack(message);
         System.out.println(getTypeNameFromTypeUrl(anymsg.getTypeUrl()));
 

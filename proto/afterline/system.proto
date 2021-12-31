@@ -21,7 +21,6 @@ message FederatedLoginResponse {
 }
 
 message FederatedLoginComplete {
-    fixed64 client_session_id = 1;
 
     string user_email = 2;
     string user_name = 3;
@@ -96,7 +95,6 @@ message GetPublicUserInfoResponse {
 }
 
 message GetUserIDRequest {
-    fixed64 session_id = 1;
 }
 
 message GetUserIDResponse {

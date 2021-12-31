@@ -23,6 +23,7 @@ public class AfterlineServerHandler extends ChannelInboundHandlerAdapter {
         try {
             Any pmsg = Any.parseFrom(in.nioBuffer());
             processMessage(pmsg, ctx.channel());
+
         } finally {
             ReferenceCountUtil.release(msg);
         }

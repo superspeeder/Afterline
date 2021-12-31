@@ -1,0 +1,158 @@
+package org.delusion.afterline.server.http;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+public enum HTTPHeaderField {
+    WWWAuthenticate("WWW-Authenticate"),
+    Authorization,
+    ProxyAuthenticate("Proxy-Authenticate"),
+    ProxyAuthorization("Proxy-Authorization"),
+    Age,
+    CacheControl("Cache-Control"),
+    ClearSiteData("Clear-Site-Data"),
+    Expires,
+    Pragma,
+    Warning,
+    AcceptCH("Accept-CH"),
+    AcceptCHLifetime("Accept-CH-Lifetime"),
+    SecCHUA("Sec-CH-UA"),
+    SecCHUAArch("Sec-CH-UA-Arch"),
+    SecCHUABitness("Sec-CH-UA-Bitness"),
+    SecCHUAFullVersion("Sec-CH-UA-Full-Version"),
+    SecCHUAFullVersionList("Sec-CH-UA-Full-Version-List"),
+    SecCHUAMobile("Sec-CH-UA-Mobile"),
+    SecCHUAModel("Sec-CH-UA-Model"),
+    SecCHUAPlatform("Sec-CH-UA-Platform"),
+    SecCHUAPlatformVersion("Sec-CH-UA-Platform-Version"),
+    ContentDPR("Content-DPR"),
+    DeviceMemory("Device-Memory"),
+    DPR,
+    ViewportWidth("Viewport-Width"),
+    Width,
+    Downlink,
+    ECT,
+    RTT,
+    SaveData("Save-Data"),
+    LastModified("Last-Modified"),
+    ETag,
+    IfMatch("If-Match"),
+    IfNoneMatch("If-None-Match"),
+    IfModifiedSince("If-Modified-Since"),
+    IfUnmodifiedSince("If-Unmodified-Since"),
+    Vary,
+    Connection,
+    KeepAlive("Keep-Alive"),
+    Accept,
+    AcceptEncoding("Accept-Encoding"),
+    AcceptLanguage("Accept-Language"),
+    Expect("Expect"),
+    MaxForwards("Max-Forwards"),
+    Cookie,
+    SetCookie("Set-Cookie"),
+    AccessControlAllowOrigin("Access-Control-Allow-Origin"),
+    AccessControlAllowCredentials("Access-Control-Allow-Credentials"),
+    AccessControlAllowHeaders("Access-Control-Allow-Headers"),
+    AccessControlAllowMethods("Access-Control-Allow-Methods"),
+    AccessControlExposeHeaders("Access-Control-Expose-Headers"),
+    AccessControlMaxAge("Access-Control-Max-Age"),
+    AccessControlRequestHeaders("Access-Control-Request-Headers"),
+    AccessControlRequestMethod("Access-Control-Request-Method"),
+    Origin,
+    TimingAllowOrigin("Timing-Allow-Origin"),
+    ContentDisposition("Content-Disposition"),
+    ContentLength("Content-Length"),
+    ContentType("Content-Type"),
+    ContentEncoding("Content-Encoding"),
+    ContentLanguage("Content-Language"),
+    ContentLocation("Content-Location"),
+    Forwarded,
+    XForwardedFor("X-Forwarded-For"),
+    XForwardedHost("X-Forwarded-Host"),
+    XForwardedProto("X-Forwarded-Proto"),
+    Via,
+    Location,
+    From,
+    Host,
+    Referer,
+    RefererPolicy("Referer-Policy"),
+    UserAgent("User-Agent"),
+    Allow,
+    Server,
+    AcceptRanges("Accept-Ranges"),
+    Range,
+    IfRange("If-Range"),
+    ContentRange("Content-Range"),
+    CrossOriginEmbedderPolicy("Cross-Origin-Embedder-Policy"),
+    CrossOriginOpenerPolicy("Cross-Origin-Opener-Policy"),
+    CrossOriginResourcePolicy("Cross-Origin-Resource-Policy"),
+    ContentSecurityPolicy("Content-Security-Policy"),
+    ContentSecurityPolicyReportOnly("Content-Security-Policy-Report-Only"),
+    ExpectCT("Expect-CT"),
+    FeaturePolicy("Feature-Policy"),
+    OriginIsolation("Origin-Isolation"),
+    StrictTransportSecurity("Strict-Transport-Security"),
+    UpgradeInsecureRequests("Upgrade-Insecure-Requests"),
+    XContentTypeOptions("X-Content-Type-Options"),
+    XDownloadOptions("X-Download-Options"),
+    XFrameOptions("X-Frame-Options"),
+    XPermittedCrossDomainPolicies("X-Permitted-Cross-Domain-Policies"),
+    XPoweredBy("X-Powered-By"),
+    XXSSProtection("X-XSS-Protection"),
+    SecFetchSite("Sec-Fetch-Site"),
+    SecFetchMode("Sec-Fetch-Mode"),
+    SecFetchUser("Sec-Fetch-User"),
+    SecFetchDest("Sec-Fetch-Dest"),
+    LastEventID("Last-Event-ID"),
+    NEL,
+    PingFrom("Ping-From"),
+    PingTo("Ping-To"),
+    ReportTo("Report-To"),
+    TransferEncoding("Transfer-Encoding"),
+    TE,
+    Trailer,
+    SecWebSocketKey("Sec-WebSocket-Key"),
+    SecWebSocketExtensions("Sec-WebSocket-Extensions"),
+    SecWebSocketAccept("Sec-WebSocket-Accept"),
+    SecWebSocketProtocol("Sec-WebSocket-Protocol"),
+    SecWebSocketVersion("Sec-WebSocket-Version"),
+    AcceptPushPolicy("Accept-Push-Policy"),
+    AcceptSignature("Accept-Signature"),
+    AltSvc("Alt-Svc"),
+    Date,
+    EarlyData("Early-Data"),
+    LargeAllocation("Large-Allocation"),
+    Link,
+    PushPolicy("Push-Policy"),
+    RetryAfter("Retry-After"),
+    Signature,
+    SignedHeaders("Signed-Headers"),
+    ServerTiming("Server-Timing"),
+    ServiceWorkerAllowed("Service-Worker-Allowed"),
+    SourceMap,
+    Upgrade,
+    XDNSPrefetchControl("X-DNS-Prefetch-Control"),
+    XRequestedWith("X-Requested-With")
+    ;
+
+    public final String text;
+    private static Map<String,HTTPHeaderField> fieldsByText;
+
+    HTTPHeaderField() {
+        text = name();
+    }
+
+    HTTPHeaderField(String s) {
+        text = s;
+    }
+
+    public HTTPHeaderField getByFieldText(String txt) {
+        if (fieldsByText == null) {
+            fieldsByText = new HashMap<>();
+            Arrays.stream(values()).forEach(hf -> fieldsByText.put(hf.text, hf));
+        }
+
+        return fieldsByText.getOrDefault(txt, null);
+    }
+}

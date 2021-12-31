@@ -19,7 +19,10 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import org.delusion.afterline.AfterlineClient;
+import org.delusion.afterline.util.Utils;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.Instant;
 
 public class MainMenu extends ScreenAdapter {
@@ -33,6 +36,7 @@ public class MainMenu extends ScreenAdapter {
     private Color bg;
     private long t = 0, t2 = 0;
     private Image icoimg2;
+    private boolean finishedLoading = false;
 
 
     public MainMenu(AfterlineClient afterlineClient) {
@@ -75,6 +79,8 @@ public class MainMenu extends ScreenAdapter {
         icoImageCell.setActor(icoimg2).left().top();
         icoImageCell.size(stage.getHeight() / 16, stage.getHeight() / 16);
         table.invalidate();
+        finishedLoading = true;
+
 
     }
 
