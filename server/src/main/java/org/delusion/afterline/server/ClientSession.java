@@ -3,8 +3,6 @@ package org.delusion.afterline.server;
 import io.netty.channel.Channel;
 import org.apache.http.client.methods.RequestBuilder;
 import org.delusion.afterline.server.util.Utils;
-import org.delusion.afterline.proto.FederatedLoginRequest;
-import org.delusion.afterline.proto.FederatedLoginResponse;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -156,16 +154,16 @@ public class ClientSession {
     private static Map<String, String> sessionCSRFStates = new ConcurrentHashMap<>(); // ip -> csrf token. This is done with cookies in a web browser, but this is more of a cross-server forgery token to prevent users other than the verified user to send this message, couples with the fact that future communication w/ server will be TLS encrypted using a certificate.
     private static Map<String, ClientSession> sessions = new ConcurrentHashMap<>();
 
-    public static void beginFederatedAuth(AfterlineServer server, FederatedLoginRequest req, Channel ch) {
+    // public static void beginFederatedAuth(AfterlineServer server, FederatedLoginRequest req, Channel ch) {
 
-        String state_ = new BigInteger(130, new SecureRandom()).toString(32);
-        sessions.put(Utils.getBasicIPString(ch), new ClientSession(ch));
-        sessionCSRFStates.put(Utils.getBasicIPString(ch), state_);
+    //     String state_ = new BigInteger(130, new SecureRandom()).toString(32);
+    //     sessions.put(Utils.getBasicIPString(ch), new ClientSession(ch));
+    //     sessionCSRFStates.put(Utils.getBasicIPString(ch), state_);
 
-        FederatedLoginResponse flr = FederatedLoginResponse.newBuilder().setLink(createAuthLink(state_)).build();
+    //     FederatedLoginResponse flr = FederatedLoginResponse.newBuilder().setLink(createAuthLink(state_)).build();
 
-        server.post(flr, ch);
-    }
+    //     server.post(flr, ch);
+    // }
 
     private static void onAuthCompleted() {
 
