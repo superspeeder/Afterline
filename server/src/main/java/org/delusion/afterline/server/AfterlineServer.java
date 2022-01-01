@@ -1,16 +1,11 @@
 package org.delusion.afterline.server;
 
-import com.google.protobuf.Any;
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.Message;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import org.delusion.afterline.proto.GetColorRequest;
-import org.delusion.afterline.proto.GetColorResponse;
 import org.delusion.afterline.server.util.TriConsumer;
 import io.netty.buffer.PooledByteBufAllocator;
 
@@ -38,13 +33,13 @@ public class AfterlineServer {
     public static final Logger LOGGER = LogManager.getLogger("Main");
 
     private int port;
-    private static Map<String, List<TriConsumer<AfterlineServer, Any, Channel>>> handlers = new HashMap<>();
+    // private static Map<String, List<TriConsumer<AfterlineServer, Any, Channel>>> handlers = new HashMap<>();
     private Thread httpThread;
 
 
-    private void initMessageHandlers() {
-        addHandler(AfterlineServer::onColorReq, GetColorRequest.class);
-    }
+    // private void initMessageHandlers() {
+    //     addHandler(AfterlineServer::onColorReq, GetColorRequest.class);
+    // }
 
 
     public AfterlineServer(int port) throws Exception {
@@ -53,7 +48,7 @@ public class AfterlineServer {
         httpThread.start();
 
         this.port = port;
-        initMessageHandlers();
+        // initMessageHandlers();
 
         LOGGER.info("Running Afterline Server on port {}", port);
         LOGGER.info("Initializing SSL");
@@ -125,47 +120,47 @@ public class AfterlineServer {
         new AfterlineServer(port);
     }
 
-    static Random random = new Random();
+    // static Random random = new Random();
 
-    private void onColorReq(GetColorRequest req, Channel channel) {
-        post(GetColorResponse.newBuilder().setColor(random.nextInt()).build(), channel);
-    }
+    // private void onColorReq(GetColorRequest req, Channel channel) {
+    //     post(GetColorResponse.newBuilder().setColor(random.nextInt()).build(), channel);
+    // }
 
-    // code adapted from com.google.protobuf.Any
-    private static String getTypeNameFromTypeUrl(String typeUrl) {
-        int pos = typeUrl.lastIndexOf('/');
-        return pos == -1 ? "" : fixProtoClassName(typeUrl.substring(pos + 1));
-    }
+    // // code adapted from com.google.protobuf.Any
+    // private static String getTypeNameFromTypeUrl(String typeUrl) {
+    //     int pos = typeUrl.lastIndexOf('/');
+    //     return pos == -1 ? "" : fixProtoClassName(typeUrl.substring(pos + 1));
+    // }
 
-    private static String fixProtoClassName(String s) {
-        if (s.startsWith("afterline.") && s.lastIndexOf('.') == s.indexOf('.')) {
-            return "org.delusion.afterline.proto." + s.substring(10);
-        }
-        return s;
-    }
+    // private static String fixProtoClassName(String s) {
+    //     if (s.startsWith("afterline.") && s.lastIndexOf('.') == s.indexOf('.')) {
+    //         return "org.delusion.afterline.proto." + s.substring(10);
+    //     }
+    //     return s;
+    // }
 
-    public void post(Message message, Channel channel) {
-        Any anymsg = Any.pack(message);
-        System.out.println(getTypeNameFromTypeUrl(anymsg.getTypeUrl()));
+    // public void post(Message message, Channel channel) {
+    //     Any anymsg = Any.pack(message);
+    //     System.out.println(getTypeNameFromTypeUrl(anymsg.getTypeUrl()));
 
-        channel.writeAndFlush(Unpooled.wrappedBuffer(anymsg.toByteArray()));
+    //     channel.writeAndFlush(Unpooled.wrappedBuffer(anymsg.toByteArray()));
 
-    }
+    // }
 
-    private static <T extends Message> void addHandler(TriConsumer<AfterlineServer, T, Channel> consumer, Class<T> cls) {
+    // private static <T extends Message> void addHandler(TriConsumer<AfterlineServer, T, Channel> consumer, Class<T> cls) {
 
-        handlers.putIfAbsent(cls.getName(), new ArrayList<>());
-        handlers.get(cls.getName()).add((afterlineServer, message, channel) -> {
-            try {
-                T unpack = message.unpack(cls);
-                consumer.accept(afterlineServer, unpack, channel);
-            } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
-            }
-        });
-    }
+    //     handlers.putIfAbsent(cls.getName(), new ArrayList<>());
+    //     handlers.get(cls.getName()).add((afterlineServer, message, channel) -> {
+    //         try {
+    //             T unpack = message.unpack(cls);
+    //             consumer.accept(afterlineServer, unpack, channel);
+    //         } catch (InvalidProtocolBufferException e) {
+    //             e.printStackTrace();
+    //         }
+    //     });
+    // }
 
-    public List<TriConsumer<AfterlineServer, Any, Channel>> getHandlers(String name) {
-        return handlers.getOrDefault(name, List.of());
-    }
+    // public List<TriConsumer<AfterlineServer, Any, Channel>> getHandlers(String name) {
+    //     return handlers.getOrDefault(name, List.of());
+    // }
 }

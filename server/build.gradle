@@ -6,13 +6,13 @@ repositories {
     mavenCentral()
 }
 
-sourceSets.main.java.srcDirs = [ "src/main/java", "../gen/" ]
+sourceSets.main.java.srcDirs = [ "src/main/java" ]
 sourceSets.main.resources.srcDirs = [ "src/main/resources" ]
 sourceCompatibility = 17
 targetCompatibility = 17
 
 dependencies {
-    implementation 'com.google.protobuf:protobuf-java:3.19.1'
+    // implementation 'com.google.protobuf:protobuf-java:3.19.1'
     implementation 'io.netty:netty-all:4.1.72.Final'
 
     implementation 'com.google.oauth-client:google-oauth-client:1.32.1'
