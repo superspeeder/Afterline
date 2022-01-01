@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HTTPResponse {
-    private static final String statusLineRegex = "^HTTP\\/(?<httpVersion>[1-9][0-9]*(\\.[1-9][0-9]*)?)\\ (?<statusCode>[1-5][0-9][0-9])\\ (?<statusMessage>.*)$";
+    private static final String statusLineRegex = "^HTTP\\/(?<httpVersion>[1-9][0-9]*(\\.[0-9]+)?)\\ (?<statusCode>[1-5][0-9][0-9])\\ (?<statusMessage>.*)$";
     private static final String headerLineRegex = "^(?<headerField>[A-Za-z][A-Za-z\\-]*):(?<headerValue>.*)$";
 
     private String httpVersionStr;
@@ -96,18 +96,6 @@ public class HTTPResponse {
         String headersText = headers.toString();
         sb.append(statusLine).append(headersText).append("\r\n").append(content).append("\r\n");
         return sb.toString();
-    }
-
-    public static void main(String[] args) {
-        System.out.println("TEST GENERATE RESPONSE");
-        System.out.println("================================================");
-        HTTPResponse resp = new HTTPResponse();
-        resp.setStatusCode(HTTPStatusCode.NotFound);
-        resp.setStatusMsg("Not Found");
-        resp.setContent("{\"test\":43}");
-        resp.getHeaders().set(HTTPHeaderField.ContentType,"text/json");
-        System.out.println(resp);
-        System.out.println("================================================");
     }
 
     public void setStatusCode(HTTPStatusCode statusCode, boolean useNameForMsg) {

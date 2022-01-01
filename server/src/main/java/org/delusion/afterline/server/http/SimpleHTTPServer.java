@@ -13,12 +13,14 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.ssl.SslProvider;
-import org.delusion.afterline.server.AfterlineServerHandler;
 
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.X509TrustManager;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.net.InetSocketAddress;
 import java.nio.file.Path;
 import java.security.cert.CertificateException;
@@ -29,6 +31,7 @@ public class SimpleHTTPServer {
     private EventLoopGroup bossGroup, workerGroup;
     private InetSocketAddress bindAddress;
 
+    public static final Logger LOGGER = LogManager.getLogger("HTTP");
 
     public SimpleHTTPServer(Supplier<HTTPServerHandler> handler, InetSocketAddress bindAddress) throws InterruptedException, SSLException {
         this(handler, bindAddress, false);
@@ -38,11 +41,11 @@ public class SimpleHTTPServer {
         this.bindAddress = bindAddress;
         this.bossGroup = new NioEventLoopGroup();
         this.workerGroup = new NioEventLoopGroup();
-
-
+        LOGGER.error("test");
 
         if (tls) {
 
+            LOGGER.info("Starting HTTPS Server at {}", bindAddress);
 
             SslContext sslContext = SslContextBuilder
                     .forServer(Path.of(System.getenv("AFTERLINE_CERT")).toFile(), Path.of(System.getenv("AFTERLINE_KEY")).toFile() )
@@ -84,14 +87,16 @@ public class SimpleHTTPServer {
                 ;
 
                 ChannelFuture f = b.bind(bindAddress).sync();
-                System.out.println("Server started at addr " + bindAddress);
+                LOGGER.info("HTTPS Server started at {}", bindAddress);
 
                 f.channel().closeFuture().sync();
             } finally {
                 workerGroup.shutdownGracefully();
                 bossGroup.shutdownGracefully();
+                LOGGER.info("HTTPS Server at {} has shut down gracefully", bindAddress);
             }
         } else {
+            LOGGER.info("Starting HTTP Server at {}", bindAddress);
 
             try {
                 ServerBootstrap b = new ServerBootstrap();
@@ -110,13 +115,19 @@ public class SimpleHTTPServer {
                 ;
 
                 ChannelFuture f = b.bind(bindAddress).sync();
-                System.out.println("Server started at addr " + bindAddress);
-
+                LOGGER.info("HTTP Server started at {}", bindAddress);
+                
                 f.channel().closeFuture().sync();
             } finally {
                 workerGroup.shutdownGracefully();
                 bossGroup.shutdownGracefully();
+                LOGGER.info("HTTP Server at {} has shut down gracefully", bindAddress);
             }
         }
     }
+
+    public InetSocketAddress getBindAddress() {
+        return bindAddress;
+    }
+
 }

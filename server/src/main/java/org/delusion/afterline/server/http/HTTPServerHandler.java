@@ -8,6 +8,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.collection.CharObjectHashMap;
 
 import java.net.Socket;
 import java.nio.charset.Charset;
@@ -20,7 +21,7 @@ public abstract class HTTPServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("Connection from " + ctx.channel().remoteAddress().toString());
+        SimpleHTTPServer.LOGGER.info("Connection from {}", ctx.channel().remoteAddress());
     }
 
     @Override
@@ -33,24 +34,34 @@ public abstract class HTTPServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         String msg = currentMessage.toString();
-        System.out.println("READ: " + msg);
+        if (msg.isEmpty()) {
+            SimpleHTTPServer.LOGGER.debug("Received a blank request, ignoring");
+            return;
+        }
+
         HTTPResponse resp = onRequest(ctx.channel(), new HTTPRequest(msg));
         String rst = resp.toString();
-        System.out.println(rst);
         ByteBuf buffer = ctx.alloc().buffer(rst.length() * 2);
         buffer.writeBytes(rst.getBytes());
         ctx.writeAndFlush(buffer);
         currentMessage.delete(0, currentMessage.length());
-        System.out.println("Wrote!");
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        if (cause.getMessage().equals("Bad HTTP Request") && cause instanceof RuntimeException) return;
-        cause.printStackTrace();
+        if (cause.getMessage().equals("Bad HTTP Request") && cause instanceof RuntimeException) {
+            SimpleHTTPServer.LOGGER.warn("Malformed HTTP Request Received");
+            SimpleHTTPServer.LOGGER.debug("Request: " + currentMessage.toString());
+
+            return;
+        }
+        SimpleHTTPServer.LOGGER.catching(cause);
     }
 
     private HTTPResponse onRequest(Channel channel, HTTPRequest request) {
+
+        // System.out.println(request.getMethod().toString() + " " + request.getPath() + " from " + channel.remoteAddress().toString());
+        SimpleHTTPServer.LOGGER.debug("{} {} from {}", request.getMethod(), request.getPath(), channel.remoteAddress());
 
         switch (request.getMethod()) {
 

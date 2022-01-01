@@ -28,11 +28,14 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.ssl.SslProvider;
-
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class AfterlineServer {
     private static final int MAX_PORT = 65535;
     private static final int DEFAULT_PORT = 9000;
+
+    public static final Logger LOGGER = LogManager.getLogger("Main");
 
     private int port;
     private static Map<String, List<TriConsumer<AfterlineServer, Any, Channel>>> handlers = new HashMap<>();
@@ -47,12 +50,13 @@ public class AfterlineServer {
     public AfterlineServer(int port) throws Exception {
         int httpPort = Integer.parseInt(System.getenv("AFTERLINE_HTTP_PORT"));
         httpThread = new Thread(() -> TestHTTPServer.create(httpPort, false));
+        httpThread.start();
 
         this.port = port;
         initMessageHandlers();
 
-        System.out.println("Running server on port " + this.port);
-
+        LOGGER.info("Running Afterline Server on port {}", port);
+        LOGGER.info("Initializing SSL");
 
         SslContext sslContext = SslContextBuilder
                 .forServer(Path.of(System.getenv("AFTERLINE_CERT")).toFile(), Path.of(System.getenv("AFTERLINE_KEY")).toFile())
@@ -75,7 +79,7 @@ public class AfterlineServer {
                     }).build();
 
         SSLEngine sslEngine = sslContext.newEngine(PooledByteBufAllocator.DEFAULT);
-
+        LOGGER.info("SSL Initialized");
 
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -88,7 +92,6 @@ public class AfterlineServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
-//  uncomment to allow the server to speak TLS
                             ch.pipeline().addLast(new SslHandler(sslEngine));
                             ch.pipeline().addLast(new AfterlineServerHandler(srv));
                         }
@@ -97,11 +100,14 @@ public class AfterlineServer {
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
             ChannelFuture f = b.bind(this.port).sync();
+            LOGGER.info("Afterline server started");
 
             f.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
+            httpThread.interrupt();
+            LOGGER.info("Afterline server shutdown gracefully");
         }
     }
 

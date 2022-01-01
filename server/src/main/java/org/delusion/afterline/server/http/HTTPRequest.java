@@ -8,7 +8,7 @@ public class HTTPRequest {
         GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH
     }
 
-    private static final String requestLineRegex = "(?<method>[a-zA-Z]+)\\ (?<path>\\/([^\\\\\\:\\ ]+)*)\\ HTTP\\/(?<httpVersion>[1-9][0-9]*(\\.[1-9][0-9]*)?)\r?\n?";
+    private static final String requestLineRegex = "(?<method>[a-zA-Z]+)\\ (?<path>\\/([^\\\\\\:\\ ]+)*)\\ HTTP\\/(?<httpVersion>[1-9][0-9]*(\\.[0-9]+)?)\r?\n?";
     private static final String headerLineRegex = "^(?<headerField>[A-Za-z][A-Za-z\\-]*):(?<headerValue>.*)$";
 
     private String httpVersionStr;
@@ -24,12 +24,23 @@ public class HTTPRequest {
         httpVersionStr = "HTTP/1.1";
     }
 
+    public static String unEscapeString(String s){
+        StringBuilder sb = new StringBuilder();
+        for (int i=0; i<s.length(); i++)
+            switch (s.charAt(i)){
+                case '\n' -> sb.append("\\n");
+                case '\t' -> sb.append("\\t");
+                case '\r' -> sb.append("\\r");
+                case '\0' -> sb.append("\\0");
+                default -> sb.append(s.charAt(i));
+            }
+        return sb.toString();
+    }
+
     public HTTPRequest(String stringToParse) {
         if (stringToParse.isEmpty()) {
-            System.out.println("WARN: cannot parse a blank request");
             throw new RuntimeException("Bad HTTP Request");
         } else {
-            System.out.println("Parsing " + stringToParse);
             String[] lines = stringToParse.split("\n");
             for (int i = 0; i < lines.length; i++)
                 lines[i] = lines[i].endsWith("\r") ? lines[i].substring(0, lines[i].length() - 1) : lines[i];
@@ -40,7 +51,6 @@ public class HTTPRequest {
             String requestLine = lines[0];
             Matcher requestLineMatcher = requestLinePattern.matcher(requestLine);
             if (requestLineMatcher.matches()) {
-                System.out.println("matches");
             }
 
             String vs = requestLineMatcher.group("httpVersion");
@@ -48,7 +58,6 @@ public class HTTPRequest {
             String methodStr = requestLineMatcher.group("method");
             method = Method.valueOf(methodStr.toUpperCase());
             path = requestLineMatcher.group("path");
-            System.out.println("REQUEST PATH: " + path);
 
             headers = new HTTPHeaders();
 
