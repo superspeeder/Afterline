@@ -21,7 +21,6 @@ public abstract class HTTPServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        SimpleHTTPServer.LOGGER.info("Connection from {}", ctx.channel().remoteAddress());
     }
 
     @Override
@@ -39,7 +38,9 @@ public abstract class HTTPServerHandler extends ChannelInboundHandlerAdapter {
             return;
         }
 
-        HTTPResponse resp = onRequest(ctx.channel(), new HTTPRequest(msg));
+        HTTPRequest req = new HTTPRequest(msg);
+        SimpleHTTPServer.LOGGER.info("Request from {}", req.getClientIP());
+        HTTPResponse resp = onRequest(ctx.channel(), req);
         String rst = resp.toString();
         ByteBuf buffer = ctx.alloc().buffer(rst.length() * 2);
         buffer.writeBytes(rst.getBytes());

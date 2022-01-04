@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HTTPResponse {
-    private static final String statusLineRegex = "^HTTP\\/(?<httpVersion>[1-9][0-9]*(\\.[0-9]+)?)\\ (?<statusCode>[1-5][0-9][0-9])\\ (?<statusMessage>.*)$";
+    private static final String statusLineRegex = "HTTP\\/(?<httpVersion>[1-9][0-9]*(\\.[0-9]+)?)\\ (?<statusCode>[1-5][0-9][0-9])\\ (?<statusMessage>.*)\r?\n?";
     private static final String headerLineRegex = "^(?<headerField>[A-Za-z][A-Za-z\\-]*):(?<headerValue>.*)$";
 
     private String httpVersionStr;
@@ -27,12 +27,15 @@ public class HTTPResponse {
 
     public HTTPResponse(String stringToParse) {
         String[] lines = stringToParse.split("\n");
-        for (int i = 0 ; i < lines.length ; i++) lines[i] = lines[i].endsWith("\r") ? lines[i].substring(0, lines[i].length() - 1) : lines[i];
+            for (int i = 0 ; i < lines.length ; i++) lines[i] = lines[i].endsWith("\r") ? lines[i].substring(0, lines[i].length() - 1) : lines[i];
         Pattern statusLinePattern = Pattern.compile(statusLineRegex);
         Pattern headerLinePattern = Pattern.compile(headerLineRegex);
 
         String statusLine = lines[0];
+
         Matcher statusLineMatcher = statusLinePattern.matcher(statusLine);
+        statusLineMatcher.matches();
+
         httpVersionStr = "HTTP/" + statusLineMatcher.group("httpVersion");
         statusCode = HTTPStatusCode.getCodeFromID(Integer.parseInt(statusLineMatcher.group("statusCode")));
         statusMsg = statusLineMatcher.group("statusMessage");
@@ -40,11 +43,12 @@ public class HTTPResponse {
         headers = new HTTPHeaders();
 
         int curLine = 1;
-        while(curLine < lines.length && !lines[curLine].equals("\n") && !lines[curLine].equals("\r\n")) {
+        while(curLine < lines.length && !lines[curLine].equals("\n") && !lines[curLine].equals("\r\n") && !lines[curLine].isEmpty()) {
             String l = lines[curLine];
             Matcher hm = headerLinePattern.matcher(l);
+            hm.matches();
             String hf = hm.group("headerField");
-            String hv = hm.group("headerValue");
+            String hv = hm.group("headerValue").strip();
             headers.set(hf, hv);
 
             curLine++;

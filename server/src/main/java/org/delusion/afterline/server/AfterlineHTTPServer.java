@@ -1,20 +1,29 @@
 package org.delusion.afterline.server;
 
 import io.netty.channel.Channel;
+
+import org.apache.http.client.protocol.RequestExpectContinue;
 import org.delusion.afterline.server.http.HTTPRequest;
 import org.delusion.afterline.server.http.HTTPResponse;
 import org.delusion.afterline.server.http.HTTPServerHandlerAdapter;
+import org.delusion.afterline.server.http.HTTPStatusCode;
+import org.delusion.afterline.server.http.SimpleHTTPClient;
 import org.delusion.afterline.server.http.SimpleHTTPServer;
+import org.delusion.afterline.server.util.Utils;
 
 import javax.net.ssl.SSLException;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
 
-public class TestHTTPServer {
+public class AfterlineHTTPServer {
     private Instant startupTime;
 
-    private TestHTTPServer() {
+    private AfterlineHTTPServer() {
         startupTime = Instant.now();
     }
     
@@ -73,9 +82,9 @@ public class TestHTTPServer {
 
     static class TestHandler extends HTTPServerHandlerAdapter {
 
-        private TestHTTPServer srv;
+        private AfterlineHTTPServer srv;
 
-        TestHandler(TestHTTPServer srv) {
+        TestHandler(AfterlineHTTPServer srv) {
             this.srv = srv;
         }
 
@@ -83,16 +92,34 @@ public class TestHTTPServer {
 
         @Override
         protected HTTPResponse onGet(Channel channel, HTTPRequest request) {
-            if (request.getPath().equals("/"))
+            URL url = request.getPathURL("https://afterline.worldofcat.org");
+
+
+            if (url.getPath().equals("/")) {
+                try {
+                    new SimpleHTTPClient(new URI("https://google.com"), new HTTPRequest(HTTPRequest.Method.GET).setPath("/"), (ch, resp) -> {
+                        SimpleHTTPServer.LOGGER.info(resp.getContent());
+                        ch.close();
+                    });
+                } catch (URISyntaxException e) {
+                    SimpleHTTPServer.LOGGER.catching(e);
+                }
+
                 return HTTPResponse.createHTML("<!DOCTYPE html><html><head><title>Test Page</title></head><body style=\"font-family: 'Roboto', sans-serif\"><h1>Hello!</h1><h2>Afterline has been online for <span style=\"font-family: 'Lucida Console', 'Courier New', monospace\">" + srv.hrUptime() + "</span></body></html>");
-            if (request.getPath().equals("/testRedirect"))
+            } else if (url.getPath().equals("/testRedirect"))
                 return HTTPResponse.redirectTo("https://example.com");
+            else if (url.getPath().equals("/authredirect")) {
+                if (ClientSession.handleAuthCallback(channel, url.getQuery(), request.getClientIP()))
+                    return HTTPResponse.createHTML("<!DOCTYPE html><html><head><title>Authentication Complete!</title></head><body style=\"font-family: 'Roboto', sans-serif\"><h1>Authentication Successful!</h1><h2>You can now return to the AfterlineEngine App!</h2></body></http>");
+                else
+                    return new HTTPResponse().setStatusCode(HTTPStatusCode.Unauthorized);
+            }
             return HTTPResponse.notFound;
         }
     }
 
     public static void create(int port, boolean ssl) {
-        TestHTTPServer srv = new TestHTTPServer();
+        AfterlineHTTPServer srv = new AfterlineHTTPServer();
 
         try {
             new SimpleHTTPServer(() -> new TestHandler(srv), new InetSocketAddress("127.0.0.1", port), ssl);
@@ -102,7 +129,7 @@ public class TestHTTPServer {
     }
 
     public static void main(String[] args) throws InterruptedException, SSLException {
-        TestHTTPServer srv = new TestHTTPServer();
+        AfterlineHTTPServer srv = new AfterlineHTTPServer();
         new SimpleHTTPServer(() -> new TestHandler(srv), new InetSocketAddress("localhost", 8080), true);
     }
 }

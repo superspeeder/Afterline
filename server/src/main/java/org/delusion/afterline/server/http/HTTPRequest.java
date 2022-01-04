@@ -1,7 +1,12 @@
 package org.delusion.afterline.server.http;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.delusion.afterline.server.AfterlineHTTPServer;
+import org.delusion.afterline.server.AfterlineServer;
 
 public class HTTPRequest {
     public enum Method {
@@ -16,12 +21,14 @@ public class HTTPRequest {
     private String path;
     private Method method;
     private String content;
+    private String client;
 
     public HTTPRequest(Method method) {
         this.method = method;
         path = "/";
         headers = new HTTPHeaders();
         httpVersionStr = "HTTP/1.1";
+        content = "";
     }
 
     public static String unEscapeString(String s){
@@ -78,6 +85,12 @@ public class HTTPRequest {
             StringBuilder content_ = new StringBuilder();
             for (; curLine < lines.length; curLine++) content_.append(lines[curLine]);
             content = content_.toString();
+
+            String xff = headers.get("X-Forwarded-For");
+            if (xff != null) {
+                client = xff.split(",")[0].strip();
+
+            }
         }
     }
 
@@ -87,6 +100,10 @@ public class HTTPRequest {
         String statusLine = method.toString() + " " + path + " " + httpVersionStr + "\r\n";
         String headersText = headers.toString();
         sb.append(statusLine).append(headersText).append("\r\n").append(content).append("\r\n");
+
+        SimpleHTTPServer.LOGGER.debug("Request sl {}", statusLine);
+        SimpleHTTPServer.LOGGER.debug("Request headers {}", headersText);
+        SimpleHTTPServer.LOGGER.debug("Request content {}", content);
         return sb.toString();
     }
 
@@ -120,6 +137,30 @@ public class HTTPRequest {
     public HTTPRequest setContent(String content) {
         this.content = content;
         return this;
+    }
+
+    public URL getPathURL(String string) {
+        try {
+            return new URL(string + getPath());
+        } catch (MalformedURLException e) {
+            SimpleHTTPServer.LOGGER.catching(e);
+            return null;
+        }
+    }
+
+    public HTTPRequest setHeader(HTTPHeaderField hf, String hv) {
+        headers.set(hf, hv);
+        return this;
+    }
+
+    public HTTPRequest setHeader(String hf, String hv) {
+        headers.set(hf, hv);
+        return this;
+    }
+
+
+    public String getClientIP() {
+        return client;
     }
 
     /*public static void main(String[] args) {

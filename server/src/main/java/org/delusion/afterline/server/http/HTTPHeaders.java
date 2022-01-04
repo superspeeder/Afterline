@@ -20,6 +20,10 @@ public class HTTPHeaders {
         return rawHeaders.get(hf);
     }
 
+    public String getOrNull(String hf) {
+        return rawHeaders.getOrDefault(hf, null);
+    }
+
     public String get(HTTPHeaderField hf) {
         return rawHeaders.get(hf.text);
     }

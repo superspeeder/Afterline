@@ -6,6 +6,8 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+
+import org.delusion.afterline.server.message.Message;
 import org.delusion.afterline.server.util.TriConsumer;
 import io.netty.buffer.PooledByteBufAllocator;
 
@@ -28,7 +30,7 @@ import org.apache.logging.log4j.LogManager;
 
 public class AfterlineServer {
     private static final int MAX_PORT = 65535;
-    private static final int DEFAULT_PORT = 9000;
+    private static final int DEFAULT_PORT = 40020;
 
     public static final Logger LOGGER = LogManager.getLogger("Main");
 
@@ -43,8 +45,12 @@ public class AfterlineServer {
 
 
     public AfterlineServer(int port) throws Exception {
+        Message.initMessages();
+        AfterlineServerHandler.initHandlers();
+
+
         int httpPort = Integer.parseInt(System.getenv("AFTERLINE_HTTP_PORT"));
-        httpThread = new Thread(() -> TestHTTPServer.create(httpPort, false));
+        httpThread = new Thread(() -> AfterlineHTTPServer.create(httpPort, false));
         httpThread.start();
 
         this.port = port;
@@ -56,24 +62,8 @@ public class AfterlineServer {
         SslContext sslContext = SslContextBuilder
                 .forServer(Path.of(System.getenv("AFTERLINE_CERT")).toFile(), Path.of(System.getenv("AFTERLINE_KEY")).toFile())
                 .sslProvider(SslProvider.OPENSSL)
-                .trustManager(new X509TrustManager() {
-                        @Override
-                        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                .trustManager(Path.of(System.getenv("AFTERLINE_CERT")).toFile()).build();
 
-                        }
-
-                        @Override
-                        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-
-                        }
-
-                        @Override
-                        public X509Certificate[] getAcceptedIssuers() {
-                            return new X509Certificate[0];
-                        }
-                    }).build();
-
-        SSLEngine sslEngine = sslContext.newEngine(PooledByteBufAllocator.DEFAULT);
         LOGGER.info("SSL Initialized");
 
         EventLoopGroup bossGroup = new NioEventLoopGroup();
@@ -87,6 +77,7 @@ public class AfterlineServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
+                            SSLEngine sslEngine = sslContext.newEngine(PooledByteBufAllocator.DEFAULT);
                             ch.pipeline().addLast(new SslHandler(sslEngine));
                             ch.pipeline().addLast(new AfterlineServerHandler(srv));
                         }
@@ -94,10 +85,11 @@ public class AfterlineServer {
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            ChannelFuture f = b.bind(this.port).sync();
+            ChannelFuture f = b.bind("0.0.0.0", this.port).sync();
             LOGGER.info("Afterline server started");
 
             f.channel().closeFuture().sync();
+            LOGGER.info("Beginning shutdown");
         } finally {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();

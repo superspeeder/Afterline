@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.delusion.afterline.server.AfterlineServer;
+import org.delusion.afterline.server.message.login.FederatedLoginRequest;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.channel.Channel;
 
 /**
  * 
@@ -24,11 +27,20 @@ public abstract class Message {
 
     private int messageID;
 
-    private Message() {
+    public Message() {
         messageID = reverseMessageRegistry.get(getClass());
     }
 
+    public static int getMessageID(Class<?> msg) {
+        return reverseMessageRegistry.getOrDefault(msg, -1);
+    }
+
+    public static boolean exists(int msgID) {
+        return messageRegistry.containsKey(msgID);
+    }
+
     protected abstract void readFromBuffer(long msgSize, ByteBuf msgData);
+    public abstract ByteBuf writeBuffer(Channel ch, ByteBufAllocator alloc);
 
     public int getID() {
         return messageID;
@@ -69,5 +81,16 @@ public abstract class Message {
             AfterlineServer.LOGGER.error("Failed to create a message with the given id {}", id);
             return null;
         }
+    }
+
+    public static void initMessages() {
+        register(EchoMessage.class);
+        register(FederatedLoginRequest.class);
+
+    }
+
+    protected static ByteBuf createBuffer(ByteBufAllocator alloc, int id, int length) {
+        ByteBuf buf = alloc.buffer((int) (length + 8));
+        return buf.writeInt(id).writeInt(length);
     }
 }

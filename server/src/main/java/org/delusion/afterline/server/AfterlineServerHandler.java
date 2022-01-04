@@ -1,16 +1,27 @@
 package org.delusion.afterline.server;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
+
+import javax.print.attribute.HashDocAttributeSet;
 
 import org.delusion.afterline.server.message.CastingMessageHandler;
+import org.delusion.afterline.server.message.EchoMessage;
 import org.delusion.afterline.server.message.Message;
 import org.delusion.afterline.server.message.MessageHandler;
+import org.delusion.afterline.server.message.MessageHandlers;
 import org.delusion.afterline.server.message.MessageID;
+import org.delusion.afterline.server.message.SubscribeMessage;
+import org.delusion.afterline.server.message.login.FederatedLoginRequest;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -31,11 +42,12 @@ public class AfterlineServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        AfterlineServer.LOGGER.info("received some data");
         ByteBuf in = (ByteBuf)msg;
         try {
 
-            int msgID = in.readUnsignedShort();
-            long msgSize = in.readUnsignedInt();
+            int msgID = in.readInt();
+            long msgSize = in.readInt();
 
             Channel ch = ctx.channel();
             Optional<Message> messageOpt = Optional.ofNullable(Message.create(msgID, msgSize, in));
@@ -52,28 +64,9 @@ public class AfterlineServerHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
-
-    // // code adapted from com.google.protobuf.Any
-    // private static String getTypeNameFromTypeUrl(String typeUrl) {
-    //     int pos = typeUrl.lastIndexOf('/');
-    //     return pos == -1 ? "" : fixProtoClassName(typeUrl.substring(pos + 1));
-    // }
-
-    // private static String fixProtoClassName(String s) {
-    //     if (s.startsWith("afterline.") && s.lastIndexOf('.') == s.indexOf('.')) {
-    //         return "org.delusion.afterline.proto." + s.substring(10);
-    //     }
-    //     return s;
-    // }
-
-    // private void processMessage(Any msg, Channel ch) throws InvalidProtocolBufferException {
-    //     String name = getTypeNameFromTypeUrl(msg.getTypeUrl());
-    //     server.getHandlers(name).forEach(cons -> cons.accept(server, msg, ch));
-    // }
-
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-
+        AfterlineServer.LOGGER.info("Connection from {}", ctx.channel().remoteAddress());
     }
 
     @Override
@@ -83,15 +76,68 @@ public class AfterlineServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     public static void registerHandler(MessageHandler hndlr, int msgID) {
+        if (msgID < 0) {
+            AfterlineServer.LOGGER.error("Cannot register a message handler for message with id {}", msgID);
+            return;
+        }
+
+        if (!Message.exists(msgID)) {
+            AfterlineServer.LOGGER.error("Cannot register a message handler for message with id {}", msgID);
+            return;
+        }
         messageHandlers.putIfAbsent(msgID, new ArrayList<>());
         messageHandlers.get(msgID).add(hndlr);
         AfterlineServer.LOGGER.debug("Registered messsage handler for message id {}", msgID);
     }
 
-    public static <T extends Message> void registerHandler(CastingMessageHandler<T> hndlr) {
-        Class<T> msgC = (Class<T>)((ParameterizedType)hndlr.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        Optional.ofNullable(msgC.getAnnotation(MessageID.class)).ifPresent(anno -> {
-            registerHandler(MessageHandler.fromCasting(hndlr), anno.id());
+    private static void initAllFrom(Class<?> clazz) {
+        // scan class
+
+        Arrays.stream(clazz.getMethods()).filter(method -> method.isAnnotationPresent(SubscribeMessage.class) && Modifier.isStatic(method.getModifiers()) && verifyArgs(method)).forEach(method -> {
+            if (method.getAnnotation(SubscribeMessage.class).id() == -1) {
+                Class<?> msg = method.getParameterTypes()[1];
+                if (msg.isAnnotationPresent(MessageID.class)) registerHandler(createMsgHandler(msg, method), msg.getAnnotation(MessageID.class).id());
+                else registerHandler(createMsgHandler(msg, method), Message.getMessageID(msg));
+            } else {
+                registerHandler((netChannel, message) -> {
+                    try {
+                        method.invoke(null, netChannel, message);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        AfterlineServer.LOGGER.catching(e);
+                        AfterlineServer.LOGGER.error("Failed to invoke message handler {}", method.getName());
+                    }
+                }, method.getAnnotation(SubscribeMessage.class).id());
+            }
         });
+    }
+
+    private static MessageHandler createMsgHandler(Class<?> msg, Method method) {
+        return (netChannel, message) -> {
+            try {
+                method.invoke(null, netChannel, msg.cast(message));
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                AfterlineServer.LOGGER.catching(e);
+                AfterlineServer.LOGGER.error("Failed to invoke message handler {}", method.getName());
+            }
+        };
+    }
+
+    public static void send(Channel ch, Message m) {
+        ByteBuf buf = m.writeBuffer(ch, ch.alloc());
+        try {
+            ch.writeAndFlush(buf).sync();
+        } catch (InterruptedException e) {
+            AfterlineServer.LOGGER.catching(e);
+        }
+//        ReferenceCountUtil.release(buf);
+    }
+
+    private static boolean verifyArgs(Method method) {
+        return method.getParameterTypes().length == 2 && method.getParameterTypes()[0].isAssignableFrom(Channel.class) && Message.class.isAssignableFrom(method.getParameterTypes()[1]);
+    }
+
+    public static void initHandlers() {
+        AfterlineServer.LOGGER.info("Starting messsage handler registry");
+        initAllFrom(MessageHandlers.class);
     }
 }

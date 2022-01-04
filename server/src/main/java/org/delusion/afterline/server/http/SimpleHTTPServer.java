@@ -68,7 +68,6 @@ public class SimpleHTTPServer {
                     })
                     .build();
 
-            SSLEngine sslEngine = sslContext.newEngine(PooledByteBufAllocator.DEFAULT);
 
             try {
                 ServerBootstrap b = new ServerBootstrap();
@@ -78,6 +77,7 @@ public class SimpleHTTPServer {
                             @Override
                             public void initChannel(SocketChannel ch) throws Exception {
                                 //  uncomment to allow the server to speak TLS
+                                SSLEngine sslEngine = sslContext.newEngine(PooledByteBufAllocator.DEFAULT);
                                 ch.pipeline().addLast(new SslHandler(sslEngine));
                                 ch.pipeline().addLast(handler.get());
                             }
