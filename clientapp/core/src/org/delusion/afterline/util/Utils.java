@@ -16,5 +16,4 @@ public class Utils {
             Desktop.getDesktop().browse(uri);
         }
     }
-
 }

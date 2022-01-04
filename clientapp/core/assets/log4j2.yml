@@ -1,0 +1,33 @@
+Configuration:
+  name: Default
+  
+  Properties:
+    Property:
+      name: log-path
+      value: "logs"
+
+  Appenders:
+    Console:
+      name: LogToConsole
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: "%highlight{%d{HH:mm:ss.SSS} %logger{36} [%-5level] @%L - %m%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green bold, DEBUG=cyan bold, TRACE=black}"
+
+    RollingFile:
+      name: LogToRollingFile
+      fileName: ${log-path}/latest.log
+      filePattern: "logs/archive/%d{yyyy-MM-dd-hh-mm}.log.gz"
+      PatternLayout:
+        pattern: "%d{HH:mm:ss.SSS} %logger{36} [%-5level] %C{12}.%M() @%L - %m%n"
+      Policies:
+        SizeBasedTriggeringPolicy:
+          size: 16 MB
+      DefaultRollOverStrategy:
+        max: 30
+              
+  Loggers:
+      Root:
+        level: debug
+        AppenderRef:
+          - ref: LogToConsole
+          - ref: LogToRollingFile

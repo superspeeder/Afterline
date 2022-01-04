@@ -1,31 +1,32 @@
 package org.delusion.afterline.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import org.delusion.afterline.AfterlineClient;
-import org.delusion.afterline.util.Utils;
+import org.delusion.afterline.net.message.EchoMessage;
+import org.delusion.afterline.ui.util.Skins;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.time.Instant;
+import java.awt.*;
 
-public class MainMenu extends ScreenAdapter {
+public class SplashScreen extends ScreenAdapter {
 
     private Texture icontex2;
     private Cell<Image> icoImageCell;
@@ -37,20 +38,20 @@ public class MainMenu extends ScreenAdapter {
     private long t = 0, t2 = 0;
     private Image icoimg2;
     private boolean finishedLoading = false;
+    private Label label;
 
 
-    public MainMenu(AfterlineClient afterlineClient) {
-//        stage = new Stage(new ScalingViewport(Scaling.fit, 1920, 1080));
+    public SplashScreen(AfterlineClient afterlineClient) {
         stage = new Stage(new ExtendViewport(1920, 1080));
 
         table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
 
-//        table.setDebug(true);
+        table.setDebug(true);
 
-        icontex = new Texture(Gdx.files.internal("textures/afterline_icon.png"));
-        icontex2 = new Texture(Gdx.files.internal("textures/afterline_icon_2_128.png"));
+        icontex = Skins.getAsset("splash.afterlineicon", Texture.class);
+        icontex2 = Skins.getAsset("menu.afterlineicon", Texture.class);
         icontex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         icontex2.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
@@ -61,6 +62,30 @@ public class MainMenu extends ScreenAdapter {
         icoimg.setScaling(Scaling.fit);
         icoImageCell = table.add(icoimg).size(Value.percentHeight(0.5f, table), Value.percentHeight(0.5f, table)).expand();
         icoImageCell.pad(20);
+
+
+        Label.LabelStyle lstyle = new Label.LabelStyle();
+        lstyle.font = Skins.getAsset("font.default.24",BitmapFont.class);
+
+        label = new Label("", lstyle);
+
+        stage.addActor(label);
+        label.setFillParent(true);
+        label.setAlignment(Align.center);
+        label.setVisible(false);
+
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.SPACE) {
+                    AfterlineClient.LOGGER.info("Sending original EchoMessage");
+                    afterlineClient.getNetClient().postMessage(new EchoMessage("Testing data"));
+                    return true;
+                }
+
+                return super.keyDown(event, keycode);
+            }
+        });
     }
 
     @Override
@@ -80,6 +105,7 @@ public class MainMenu extends ScreenAdapter {
         icoImageCell.size(stage.getHeight() / 16, stage.getHeight() / 16);
         table.invalidate();
         finishedLoading = true;
+        label.setVisible(true);
 
 
     }
@@ -116,7 +142,6 @@ public class MainMenu extends ScreenAdapter {
                 float d = ((float) (t2 - t)) / 1400.0f;
                 Color c = Color.WHITE.cpy().lerp(AfterlineClient.BACKGROUND, 1.0f - d);
                 ScreenUtils.clear(c);
-                System.out.println(d + " " + c.toString() + " " + AfterlineClient.BACKGROUND);
             } else {
                 ScreenUtils.clear(AfterlineClient.BACKGROUND);
             }
@@ -132,5 +157,9 @@ public class MainMenu extends ScreenAdapter {
     @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    public void setText(String data) {
+        label.setText(data);
     }
 }
