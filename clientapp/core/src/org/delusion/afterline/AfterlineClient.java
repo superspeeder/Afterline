@@ -52,6 +52,6 @@ public class AfterlineClient extends Game {
 	}
 
 	public void onConnectToServer() {
-		netClient.postMessage(new FederatedLoginRequest());
+//		netClient.postMessage(new FederatedLoginRequest());
 	}
 }

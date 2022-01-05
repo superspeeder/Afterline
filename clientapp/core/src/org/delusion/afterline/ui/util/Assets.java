@@ -29,17 +29,24 @@ public class Assets {
         param.color = color;
         param.size = size;
 
-        BitmapFont fnt = getAsset(freetypeFont, FreeTypeFontGenerator.class).generateFont(param);
+        FreeTypeFontGenerator gen = getAsset(freetypeFont, FreeTypeFontGenerator.class);
+
+        BitmapFont fnt = gen.generateFont(param);
+        fnt.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
         addAsset(name, fnt);
     }
 
     public void addFont(String name, String freetypeFont, FontBuilder fb) {
-        BitmapFont fnt = getAsset(freetypeFont, FreeTypeFontGenerator.class).generateFont(fb.build());
+        FreeTypeFontGenerator gen = getAsset(freetypeFont, FreeTypeFontGenerator.class);
+        BitmapFont fnt = gen.generateFont(fb.build());
+        fnt.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         addAsset(name, fnt);
     }
 
     public void addFreetypeFont(String name, FileHandle file) {
         addAsset(name, new FreeTypeFontGenerator(file));
+
     }
 
     public void addTexture(String name, FileHandle file) {
