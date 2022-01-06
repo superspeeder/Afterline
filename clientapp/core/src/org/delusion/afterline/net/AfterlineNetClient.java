@@ -1,51 +1,95 @@
 package org.delusion.afterline.net;
 
-import com.google.protobuf.Any;
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.Message;
+import com.badlogic.gdx.Gdx;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.SslHandler;
+import io.netty.handler.ssl.SslProvider;
 import org.delusion.afterline.AfterlineClient;
-import org.delusion.afterline.proto.GetColorResponse;
-import org.delusion.afterline.util.TriConsumer;
+import org.delusion.afterline.net.message.*;
+import org.delusion.afterline.net.message.login.FederatedLoginRequest;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
+import javax.net.ssl.SSLEngine;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 public class AfterlineNetClient extends Thread {
-    private static final String SERVER_ADDR = "localhost";
-    private static final int SERVER_PORT = 9000;
+    private static final String SERVER_ADDR = "afterline.worldofcat.org";
+    private static final int SERVER_PORT = 40020;
 
     private final AfterlineClient client;
     private Channel channel;
-    private static Map<String, List<BiConsumer<AfterlineClient, Any>>> handlers = new HashMap<>();
-
 
     public AfterlineNetClient(AfterlineClient client) {
-        this.client = client;
+        initMessages();
         initMessageHandlers();
+
+        this.client = client;
+    }
+
+    private void initMessages() {
+        Message.register(EchoMessage.class);
+        Message.register(FederatedLoginRequest.class);
+    }
+
+    private void initMessageHandlers() {
+        initAllFrom(Handlers.class);
+    }
+
+    private void initAllFrom(Class<?> clazz) {
+        // scan class
+
+        Arrays.stream(clazz.getMethods()).filter(method -> method.isAnnotationPresent(SubscribeMessage.class) && Modifier.isStatic(method.getModifiers()) && verifyArgs(method)).forEach(method -> {
+            if (method.getAnnotation(SubscribeMessage.class).id() == -1) {
+                Class<?> msg = method.getParameterTypes()[1];
+                if (msg.isAnnotationPresent(MessageID.class)) AfterlineClientHandler.registerHandler(createMsgHandler(msg, method), msg.getAnnotation(MessageID.class).id());
+                else AfterlineClientHandler.registerHandler(createMsgHandler(msg, method), Message.getMessageID(msg));
+            } else {
+                AfterlineClientHandler.registerHandler((netChannel, message) -> {
+                    try {
+                        method.invoke(null, netChannel, message);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        AfterlineClient.LOGGER.catching(e);
+                        AfterlineClient.LOGGER.error("Failed to invoke message handler {}", method.getName());
+                    }
+                }, method.getAnnotation(SubscribeMessage.class).id());
+            }
+        });
+    }
+
+    private MessageHandler createMsgHandler(Class<?> msg, Method method) {
+        return (netChannel, message) -> {
+            try {
+                method.invoke(null, netChannel, msg.cast(message));
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                AfterlineClient.LOGGER.catching(e);
+                AfterlineClient.LOGGER.error("Failed to invoke message handler {}", method.getName());
+            }
+        };
+    }
+
+    private boolean verifyArgs(Method method) {
+        return method.getParameterTypes().length == 2 && method.getParameterTypes()[0].isAssignableFrom(Channel.class) && Message.class.isAssignableFrom(method.getParameterTypes()[1]);
     }
 
     @Override
     public void run() {
         try {
 
-            /* uncomment to allow the client to speak tls
             SslContext sslContext = SslContextBuilder.forClient()
                     .sslProvider(SslProvider.OPENSSL)
-                    .build();
+                    .trustManager(Gdx.files.internal("cert.pem").read()).build();
 
             SSLEngine sslEngine = sslContext.newEngine(PooledByteBufAllocator.DEFAULT);
-             */
 
             EventLoopGroup workerGroup = new NioEventLoopGroup();
             final AfterlineNetClient nc = this;
@@ -58,15 +102,16 @@ public class AfterlineNetClient extends Thread {
 
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-//  uncomment to allow the client to speak TLS
-//                        ch.pipeline().addLast(new SslHandler(sslEngine));
+                        ch.pipeline().addLast(new SslHandler(sslEngine));
                         ch.pipeline().addLast(new AfterlineClientHandler(nc));
                     }
                 });
 
                 ChannelFuture f = b.connect(SERVER_ADDR, SERVER_PORT).sync();
-
                 channel = f.channel();
+
+                AfterlineClient.INSTANCE.onConnectToServer();
+
                 channel.closeFuture().sync();
 
             } catch (InterruptedException e) {
@@ -88,44 +133,17 @@ public class AfterlineNetClient extends Thread {
         return channel;
     }
 
-    public void stopServer() {
+    public void stopClient() {
         channel.close();
     }
 
-    // code taken from com.google.protobuf.Any
-    private static String getTypeNameFromTypeUrl(String typeUrl) {
-        int pos = typeUrl.lastIndexOf('/');
-        return pos == -1 ? "" : fixProtoClassName(typeUrl.substring(pos + 1));
-    }
-
-    private static String fixProtoClassName(String s) {
-        if (s.startsWith("afterline.") && s.lastIndexOf('.') == s.indexOf('.')) {
-            return "org.delusion.afterline.proto." + s.substring(10);
+    public void postMessage(Message message) {
+        ByteBuf buf = message.writeBuffer(channel, channel.alloc());
+        try {
+            channel.writeAndFlush(buf).sync();
+        } catch (InterruptedException e) {
+            AfterlineClient.LOGGER.catching(e);
         }
-        return s;
-    }
-
-    public void post(Message message) {
-        Any anymsg = Any.pack(message);
-        channel.writeAndFlush(Unpooled.wrappedBuffer(anymsg.toByteArray()));
-    }
-
-    private <T extends Message> void addHandler(TriConsumer<AfterlineClient, T, Channel> consumer, Class<T> cls) {
-        handlers.putIfAbsent(cls.getName(), new ArrayList<>());
-        handlers.get(cls.getName()).add((afterlineServer, message) -> {
-            try {
-                T unpack = message.unpack(cls);
-                consumer.accept(client, unpack, channel);
-            } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    public List<BiConsumer<AfterlineClient, Any>> getHandlers(String name) {
-        return handlers.getOrDefault(name, List.of());
-    }
-
-    private void initMessageHandlers() {
+//        ReferenceCountUtil.release(buf);
     }
 }

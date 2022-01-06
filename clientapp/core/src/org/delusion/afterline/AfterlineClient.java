@@ -1,35 +1,65 @@
 package org.delusion.afterline;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.google.protobuf.Message;
-import io.netty.channel.Channel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.delusion.afterline.net.AfterlineNetClient;
-import org.delusion.afterline.ui.MainMenu;
+import org.delusion.afterline.ui.SplashScreen;
+import org.delusion.afterline.ui.util.Skins;
 
 public class AfterlineClient extends Game {
 	public static final Color BACKGROUND = Color.DARK_GRAY;
-	private AfterlineNetClient netClient;
-	private MainMenu mainMenu;
+    public static final Logger LOGGER = LogManager.getLogger("Main");
+    private AfterlineNetClient netClient;
+	private SplashScreen splashScreen;
 
 	public static final Color ICONBG = new Color(0x387BE4FF);
 
+	public static AfterlineClient INSTANCE;
+	private AfterlineClientContext context = new AfterlineClientContext();
+
+	public static SplashScreen getSplashScreen() {
+		return INSTANCE.splashScreen;
+	}
+
+	public AfterlineClient() {
+		super();
+		INSTANCE = this;
+	}
+
 	@Override
 	public void create () {
+		Skins.init();
+
 		netClient = new AfterlineNetClient(this);
 		netClient.start();
-		mainMenu = new MainMenu(this);
+		splashScreen = new SplashScreen(this);
 		ScreenUtils.clear(0,0,0,1);
-		setScreen(mainMenu);
-		
+		setScreen(splashScreen);
+
 	}
 
 	@Override
 	public void dispose () {
-		netClient.stopServer();
-		mainMenu.dispose();
+		netClient.stopClient();
+		splashScreen.dispose();
+	}
+
+	public AfterlineNetClient getNetClient() {
+		return netClient;
+	}
+
+	public void onConnectToServer() {
+//		netClient.postMessage(new FederatedLoginRequest());
+	}
+
+	public void setCurrentUser(String username) {
+		context.userLoggedIn(username);
+	}
+
+	public AfterlineClientContext getContext() {
+		return context;
 	}
 }
