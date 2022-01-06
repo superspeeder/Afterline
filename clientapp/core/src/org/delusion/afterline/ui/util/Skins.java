@@ -37,7 +37,7 @@ public class Skins {
         assets.addFont("font.default.16.white", Color.WHITE, 16, "font.default.family");
 
         // 9-Patches
-        assets.addAsset("menu.winbg.9p", new NinePatch(new Texture(Gdx.files.internal("textures/menu/win_bg.png")), 15,15,15,15));
+        assets.addAsset("menu.winbg.9p", new NinePatch(new Texture(Gdx.files.internal("textures/menu/win_bg.png")), 4, 4, 4, 4));
         assets.addAsset("menu.textfield.9p", new NinePatch(new Texture(Gdx.files.internal("textures/menu/textfield_bg.png")), 4, 4, 4, 4));
         assets.addAsset("menu.button.normal.9p", new NinePatch(new Texture(Gdx.files.internal("textures/menu/button_bg_normal.png")), 4, 4, 4, 4));
         assets.addAsset("menu.button.depressed.9p", new NinePatch(new Texture(Gdx.files.internal("textures/menu/button_bg_depressed.png")), 4, 4, 4, 4));

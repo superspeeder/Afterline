@@ -6,7 +6,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.delusion.afterline.net.AfterlineNetClient;
-import org.delusion.afterline.net.message.login.FederatedLoginRequest;
 import org.delusion.afterline.ui.SplashScreen;
 import org.delusion.afterline.ui.util.Skins;
 
@@ -19,6 +18,7 @@ public class AfterlineClient extends Game {
 	public static final Color ICONBG = new Color(0x387BE4FF);
 
 	public static AfterlineClient INSTANCE;
+	private AfterlineClientContext context = new AfterlineClientContext();
 
 	public static SplashScreen getSplashScreen() {
 		return INSTANCE.splashScreen;
@@ -53,5 +53,13 @@ public class AfterlineClient extends Game {
 
 	public void onConnectToServer() {
 //		netClient.postMessage(new FederatedLoginRequest());
+	}
+
+	public void setCurrentUser(String username) {
+		context.userLoggedIn(username);
+	}
+
+	public AfterlineClientContext getContext() {
+		return context;
 	}
 }

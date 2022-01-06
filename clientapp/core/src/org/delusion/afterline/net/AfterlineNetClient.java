@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -13,23 +12,15 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.ssl.SslProvider;
-import io.netty.util.ReferenceCountUtil;
 import org.delusion.afterline.AfterlineClient;
 import org.delusion.afterline.net.message.*;
 import org.delusion.afterline.net.message.login.FederatedLoginRequest;
-import org.delusion.afterline.util.TriConsumer;
 
 import javax.net.ssl.SSLEngine;
-import javax.net.ssl.X509TrustManager;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.BiConsumer;
 
 public class AfterlineNetClient extends Thread {
     private static final String SERVER_ADDR = "afterline.worldofcat.org";
@@ -51,7 +42,7 @@ public class AfterlineNetClient extends Thread {
     }
 
     private void initMessageHandlers() {
-        initAllFrom(TestHandlers.class);
+        initAllFrom(Handlers.class);
     }
 
     private void initAllFrom(Class<?> clazz) {

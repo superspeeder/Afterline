@@ -81,7 +81,7 @@ public class SplashScreen extends ScreenAdapter {
         label.setVisible(false);
 //
         Window.WindowStyle ws = new Window.WindowStyle();
-        ws.titleFont = Skins.getAsset("font.default.16.white",BitmapFont.class);
+        ws.titleFont = Skins.getAsset("font.default.24",BitmapFont.class);
 //        Window win = new Window("Create Account", ws);
 //        win.setDebug(true,true);
 //        win.set
@@ -113,13 +113,14 @@ public class SplashScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 afterlineClient.getNetClient().postMessage(new FederatedLoginRequest(tf.getText()));
+                afterlineClient.getContext().beginUserAuth(tf.getText());
                 loginDialog.clear();
                 loginDialog.remove();
             }
         });
 
         loginDialog = new Dialog("Login", ws);
-        loginDialog.getContentTable().left().padLeft(12).padRight(8).padTop(12).padBottom(12).add(l2);
+        loginDialog.getContentTable().left().padLeft(12).padRight(8).padTop(36).padBottom(12).add(l2);
         loginDialog.getContentTable().right().add(tf).maxHeight(24).fillX().expandX();
         loginDialog.getButtonTable().center().add(okBtn).maxWidth(80).maxHeight(24);
         loginDialog.setMovable(true);
@@ -130,7 +131,8 @@ public class SplashScreen extends ScreenAdapter {
         loginDialog.setPosition(stage.getWidth() / 2 - loginDialog.getWidth() / 2, stage.getHeight() / 2 - loginDialog.getHeight() / 2);
         loginDialog.setVisible(false);
 
-
+        loginDialog.getTitleLabel().setAlignment(Align.top);
+        loginDialog.getTitleTable().getCell(loginDialog.getTitleLabel()).minHeight(28).padTop(30);
 
 
         stage.addActor(loginDialog);
